@@ -99,6 +99,14 @@ OPTIMAL表示相应阶段已证明最优，FEASIBLE表示仅取得可行解。�
 
 完整最终计划和求解状态保存在 `answer/.cache/q2/solution.json`，可供问题3使用；独立验证记录保存在 `answer/.cache/q2/verification.json`。
 
+## 源码解读
+
+- `intervals(p)` 把首次时段、单次时长、空闲间隔和次数展开成全部重复区间。
+- `safe_differences(a, b)` 逐一试算相对时间平移，得到不会产生周期冲突的安全差值集合。
+- `add_allowed_assignments` 限制一台装备只能原样保留、只频移或只平移首次时间，不能同时改两个参数。
+- `add_bool_or(terms)` 给每对装备保留至少一条避让路径：撤销、频段分开或时间错开。
+- `objectives` 列表按七个目标逐层求解，每完成一层就锁定当前值；`save` 将方案写入缓存，验证脚本再独立复核。
+
 ## 文档与源码对应关系
 
 | 内容 | 源码或结果 |
