@@ -211,8 +211,6 @@ uv run python src/q4/select.py solution.json round2_global.json round2_refined.j
 
 择优后重新导出、验证并生成报告。限时结果可能随机器和线程调度变化。
 
-比赛规则和可确认的AI参与环节已记入 `docs/规则核对与AI使用记录.md`。该文件明确区分程序自动核验与参赛队人工审查，不能代替最终人工复核及规定的AI使用详情PDF。
-
 问题3、4也使用 `src/export_xlsx.py` 导出，不依赖额外运行时。问题3、4验证器要求对应最终Excel存在；失败返回非零退出码。
 
 报告程序会再次调用验证器，避免输出未经验证或与当前表格不一致的统计。
