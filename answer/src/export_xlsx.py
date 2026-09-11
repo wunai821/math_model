@@ -1,8 +1,4 @@
-"""Portable Excel exporter for questions 1-4.
-
-This exporter uses the project's Python dependency only.  It is intended for
-machines that do not have Codex's bundled Node.js and artifact-tool runtime.
-"""
+"""使用项目已有 Python 依赖导出四问 Excel 结果。"""
 from __future__ import annotations
 
 import argparse
@@ -17,6 +13,7 @@ ANSWER = ROOT / "answer"
 
 
 def load_rows(question: int) -> list[list[object]]:
+    # 问题1保存的是冲突对，问题2至4保存的是最终提交行。
     cache = ANSWER / ".cache" / f"q{question}"
     if question == 1:
         data = json.loads((cache / "data.json").read_text(encoding="utf-8"))
@@ -38,14 +35,14 @@ def export(question: int) -> Path:
             f"Question {question} has rows with a column count different from the template"
         )
 
-    # Templates currently contain only the header, but clear any old data rows
-    # so rerunning after a different timed solve cannot leave stale records.
+    # 先清理旧数据，避免不同次限时求解的行数不同而残留旧记录。
     if sheet.max_row > 1:
         for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row,
                                    max_col=expected_columns):
             for cell in row:
                 cell.value = None
 
+    # 从第二行开始写入结果，第一行模板表头保持不变。
     for row_index, values in enumerate(rows, start=2):
         for column_index, value in enumerate(values, start=1):
             sheet.cell(row=row_index, column=column_index, value=value)

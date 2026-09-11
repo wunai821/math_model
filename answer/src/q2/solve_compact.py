@@ -1,4 +1,4 @@
-"""Compact CP-SAT model for question 2."""
+"""问题2紧凑 CP-SAT 模型：用装备对约束替代完整时频网格。"""
 import json
 import os
 import sys
@@ -17,6 +17,7 @@ CACHE = ROOT / "answer/.cache/q2"
 OUTPUT = CACHE / "solution.json"
 HINT = CACHE / "solution.json"
 LOG = CACHE / "compact.log"
+# 不同目标阶段使用不同时间上限，前面的核心目标通常需要更多时间。
 PRIMARY_SECONDS, MID_SECONDS, LATE_SECONDS = 180, 90, 30
 OBJECTIVE_NAMES = ('cancel_total', 'cancel_A', 'cancel_B', 'adjust_total',
                    'adjust_A', 'adjust_B', 'shift_cost')
@@ -44,6 +45,7 @@ def validate_resume(plans, data, fix_prefix):
 
 
 def intervals(p):
+    # 根据首次时段、单次时长和空闲间隔展开所有重复使用时段。
     duration = p["end"] - p["start"]
     return [(p["start"] + k * (duration + p["gap"]),
              p["start"] + k * (duration + p["gap"]) + duration)
@@ -52,6 +54,7 @@ def intervals(p):
 
 def safe_differences(a, b):
     """t_a-t_b values in [-10, 10] which make all repeated periods disjoint."""
+    # 预先计算两个装备之间哪些时间平移差不会产生周期冲突。
     result = []
     for d in range(-10, 11):
         overlap = any(sa + d < eb and sb < ea + d
@@ -129,6 +132,7 @@ def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
         historical = validate_resume(plans, json.loads(hint_path.read_text(encoding='utf-8')), fix_prefix)
     variables, cancels, changes = {}, [], []
     for p in plans:
+        # 频移和时间平移各自只能在题目允许的范围内取值。
         fv = list(range(max(-10, -p["lo"]), min(10, 100 - p["hi"]) + 1))
         tv = list(range(max(-5, -p["start"]), 6))
         f = model.new_int_var_from_domain(cp_model.Domain.FromValues(fv), f"f_{p['id']}")
@@ -148,6 +152,7 @@ def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
                 model.add_hint(f, df); model.add_hint(t, dt); model.add_hint(cancel, cn)
                 model.add_hint(changed, int(not cn and bool(df or dt)))
 
+    # 对每一对可能发生资源冲突的装备建立至少一种“避让方式”。
     pair_count = 0
     for n, a in enumerate(plans):
         va = variables[a["id"]]
@@ -171,12 +176,14 @@ def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
             model.add_bool_or(terms)
             pair_count += 1
 
+    # 归一化成本：频移每格计1，时间平移每格计2。
     costs = []
     for p in plans:
         v = variables[p["id"]]
         af, at = model.new_int_var(0, 10, f"abs_f_{p['id']}"), model.new_int_var(0, 5, f"abs_t_{p['id']}")
         model.add_abs_equality(af, v["f"]); model.add_abs_equality(at, v["t"])
         costs.append(af + 2 * at)
+    # 目标按撤销数量、调整数量、类别优先级和成本依次优化。
     objectives = [
         ("cancel_total", sum(v for _, v in cancels), primary_seconds),
         ("cancel_A", sum(v for p, v in cancels if p["id"].startswith("A")), late_seconds),
@@ -215,6 +222,7 @@ def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
         return dict(cancel_b_limit=cancel_b_limit,
                     cap_satisfied=b_canceled <= cancel_b_limit,
                     fallback=b_canceled > cancel_b_limit)
+    # 每完成一个阶段就保存一次，避免后续限时阶段中断导致结果丢失。
     for index, (name, expr, seconds) in enumerate(objectives[fix_prefix:], start=fix_prefix + 1):
         model.minimize(expr)
         solver = cp_model.CpSolver()

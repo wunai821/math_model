@@ -8,10 +8,12 @@ import openpyxl
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from console import header, summary
 
+# 代码放在 answer/src/q1 下，因此向上三级得到项目根目录。
 root = Path(__file__).resolve().parents[3]
 cache = root / 'answer/.cache/q1'
 cache.mkdir(parents=True, exist_ok=True)
 plans = []
+# 读取原始计划，并把每台装备的周期性使用时段展开出来。
 for ident, freq, time, gap, count in list(openpyxl.load_workbook(root/'附件/附件1.xlsx', data_only=True).active.values)[1:]:
     lo, hi = map(int, re.findall(r'\d+', freq))
     start, end = map(int, re.findall(r'\d+', time))
@@ -21,6 +23,7 @@ for ident, freq, time, gap, count in list(openpyxl.load_workbook(root/'附件/�
     plans.append(dict(id=ident, lo=lo, hi=hi, slots=slots))
 assert len(plans) == len({p['id'] for p in plans}) == 150
 pairs, events = [], []
+# 两台装备只有在频段相交且至少一次使用时段相交时，才构成冲突。
 for a,b in combinations(plans,2):
     if max(a['lo'],b['lo']) >= min(a['hi'],b['hi']):
         continue
@@ -28,17 +31,19 @@ for a,b in combinations(plans,2):
     if hits:
         pairs.append([a['id'],b['id']])
         events.extend([[a['id'],b['id'],*h] for h in hits])
-# Independent exact verification using occupied discrete time-frequency cells.
+# 用离散的“时间-频率”单元再次核对冲突，作为独立复核。
 occupants = defaultdict(list)
 for p in plans:
     for s,t in p['slots']:
         for time in range(s,t):
             for freq in range(p['lo'],p['hi']):
                 occupants[time,freq].append(p['id'])
+# 将每个资源单元中的装备两两组合，得到网格法识别的冲突对。
 grid_pairs = set()
 for ids in occupants.values():
     grid_pairs.update(tuple(sorted(x)) for x in combinations(ids,2))
 assert grid_pairs == {tuple(sorted(x)) for x in pairs}
+# 汇总各类别、涉及装备数和每台装备的冲突度，供报告使用。
 degree = Counter(x for pair in pairs for x in pair)
 types = Counter(''.join(sorted([a[0],b[0]])) for a,b in pairs)
 counts = Counter(p['id'][0] for p in plans)

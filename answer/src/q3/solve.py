@@ -1,4 +1,4 @@
-"""Q3: maximum packing of identical repeated C plans around fixed Q2 plans."""
+"""问题3：在固定问题2方案的基础上，最大化新增C类装备数量。"""
 import argparse
 import json
 import os
@@ -15,6 +15,7 @@ CACHE = ANSWER / '.cache/q3'
 
 
 def solve(seconds=180, workers=8):
+    # 问题3的新增装备必须继承附件中C类装备的统一参数。
     source = read_plans()
     shapes = {(p['hi'] - p['lo'], p['end'] - p['start'], p['gap'], p['count'])
               for p in source if p['id'].startswith('C')}
@@ -22,6 +23,7 @@ def solve(seconds=180, workers=8):
         raise ValueError('Q3 requires a specified homogeneous C equipment profile')
     width, duration, gap, count = shapes.pop()
     horizon = max(end for p in source for _, end in periods(p))
+    # 问题2的有效计划作为不可移动的基准资源占用。
     q2_path = ANSWER / '.cache/q2/solution.json'
     q2 = json.loads(q2_path.read_text(encoding='utf-8'))
     if {p['id'] for p in q2['plans']} != {p['id'] for p in source}:
@@ -36,10 +38,12 @@ def solve(seconds=180, workers=8):
         if occupied.intersection(pcells):
             raise ValueError('Q2 baseline contains conflicts')
         occupied.update(pcells)
+    # 一个新增装备从首次使用到最后一次使用所需的总时间跨度。
     span = duration + (count - 1) * (duration + gap)
     model = cp_model.CpModel()
     candidates, variables = [], []
     resource = defaultdict(list)
+    # 枚举所有合法的首次时间和频段，并过滤与问题2基准冲突的候选。
     for start in range(horizon - span + 1):
         for lo in range(101 - width):
             p = dict(lo=lo, hi=lo + width, start=start, end=start + duration, gap=gap, count=count)
@@ -61,6 +65,7 @@ def solve(seconds=180, workers=8):
         model.add_hint(v, int(take))
         if take:
             used.update(pcells)
+    # 面积上界只是辅助剪枝，最终数量仍由CP-SAT精确求解。
     area_bound = (100 * horizon - len(occupied)) // (width * duration * count)
     model.add(sum(variables) <= area_bound)
     model.maximize(sum(variables))

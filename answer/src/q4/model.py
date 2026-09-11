@@ -11,6 +11,7 @@ OBJECTIVE_NAMES = ('cancel_total', 'cancel_A', 'cancel_B', 'adjust_total',
 
 def objective_terms(candidate):
     """Return Q4's seven lexicographic objective coefficients for a candidate."""
+    # 返回一个候选在七层字典序目标中的贡献值。
     canceled = int(candidate['canceled'])
     group = candidate['id'][0]
     adjusted = int(not canceled and bool(candidate['df'] or candidate['dt'] or candidate['dg']))
@@ -21,6 +22,7 @@ def objective_terms(candidate):
 
 def candidates_for(p):
     """Enumerate the Q4 legal one-parameter moves and cancellation option."""
+    # 每台装备只能选择一种调整参数，或选择撤销。
     moves = [(0, 0, 0)]
     moves += [(x, 0, 0) for x in range(-10, 11) if x]
     moves += [(0, x, 0) for x in range(-5, 6) if x]
@@ -43,6 +45,7 @@ def build_model(plans):
     by the lexicographic solver and cap-feasibility checks.
     """
     model = cp_model.CpModel()
+    # 资源字典把相互冲突的候选集中起来，统一生成互斥约束。
     candidates, variables = [], []
     resource = defaultdict(list)
     for p in plans:
@@ -55,9 +58,11 @@ def build_model(plans):
             if not candidate['canceled']:
                 for cell in cells(candidate):
                     resource[cell].append(index)
+        # 每台装备必须且只能选择一个候选状态。
         model.add_exactly_one(variables[index] for index in indices)
     exclusions = sorted({tuple(indices) for indices in resource.values() if len(indices) > 1})
     for indices in exclusions:
+        # 同一时频单元最多被一个候选占用。
         model.add_at_most_one(variables[index] for index in indices)
     metadata = dict(candidates=len(candidates), resource_constraints=len(exclusions))
     return model, candidates, variables, metadata

@@ -1,4 +1,4 @@
-"""Question 2: finite candidate selection with exact time-frequency exclusions."""
+"""问题2：枚举有限调整候选，并用精确资源冲突约束选择方案。"""
 import argparse
 import json
 import os
@@ -19,6 +19,7 @@ CACHE.mkdir(parents=True, exist_ok=True)
 
 
 def read_plans():
+    # 统一把附件中的频段、时间段和周期参数读成整数计划记录。
     rows = list(openpyxl.load_workbook(ROOT/'附件/附件1.xlsx', data_only=True).active.values)[1:]
     plans = []
     for ident, freq, interval, gap, count in rows:
@@ -29,6 +30,7 @@ def read_plans():
 
 
 def solve(seconds, resume=False):
+    # 每台装备从“不调整”、频移、时间平移和“撤销”中选择一个候选。
     plans = read_plans()
     model = cp_model.CpModel()
     candidates, variables, by_plan = [], [], []
@@ -44,6 +46,7 @@ def solve(seconds, resume=False):
             variables.append(model.new_bool_var(f"{p['id']}_{df}_{dt}"))
             candidates.append(dict(id=p['id'], df=df, dt=dt, cancel=False))
             d = p['end']-p['start']
+            # 候选占用的每个时频单元都记录下来，后面据此建立互斥约束。
             for k in range(p['count']):
                 start = p['start'] + dt + k*(d+p['gap'])
                 for t in range(start, start+d):
@@ -55,10 +58,11 @@ def solve(seconds, resume=False):
         candidates.append(dict(id=p['id'], df=0, dt=0, cancel=True))
         model.add_exactly_one(variables[i] for i in indices)
         by_plan.append(indices)
-    # Every resource cell admits at most one selected plan candidate.
+    # 一个资源单元最多允许一个候选方案占用。
     exclusions = set(tuple(v) for v in cells.values() if len(v) > 1)
     for ids in exclusions:
         model.add_at_most_one(variables[i] for i in ids)
+    # 按题目要求使用字典序目标，前一阶段锁定后再优化下一阶段。
     objectives = [
         ('cancel_total', lambda c: int(c['cancel'])),
         ('cancel_A', lambda c: int(c['cancel'] and c['id'][0]=='A')),
@@ -80,7 +84,7 @@ def solve(seconds, resume=False):
             model.add(sum(cost(c)*v for c,v in zip(candidates,variables)) == old['value'])
             log.append(old)
         objectives = objectives[2:]
-    # Valid initial solution: cancel every plan; the solver improves it.
+    # 用“全部撤销”作为一定可行的初始提示，帮助求解器更快找到方案。
     for ids in by_plan:
         for i in ids:
             c = candidates[i]
@@ -105,6 +109,7 @@ def solve(seconds, resume=False):
             log.append(record)
             stage(record, index)
             break
+        # 读取本阶段选择结果，并将目标值固定后进入下一阶段。
         values = [solver.value(v) for v in variables]
         selected = [c for c,val in zip(candidates,values) if val]
         value = int(round(solver.objective_value))

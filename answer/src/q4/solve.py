@@ -1,4 +1,4 @@
-"""Q4: exact candidate selection, including C-only idle-gap changes."""
+"""问题4：允许C类调整空闲间隔的精确候选选择模型。"""
 import argparse
 import json
 import os
@@ -41,6 +41,7 @@ def save(selected, stages, metadata, output=CACHE / 'solution.json'):
 
 def read_hint(name):
     """Load and independently validate a Q4 cache plan before using it."""
+    # 提示方案只用于加速；使用前先独立检查来源、操作范围和冲突。
     if name is None:
         paths = (CACHE / 'solution.json', ANSWER / 'benchmarks/q4_reference.json',
                  ANSWER / '.cache/q2/solution.json')
@@ -70,6 +71,7 @@ def solve(seconds=60, primary_seconds=180, workers=8, hint_name=None,
     plans = read_plans()
     hint_data, hint_label, hint_stages = read_hint(hint_name)
     hints = {p['id']: p for p in hint_data.get('plans', [])} if hint_data else {}
+    # 构造所有候选及资源互斥约束。
     model, candidates, variables, model_metadata = build_model(plans)
     metadata = dict(model_metadata,
                     source_sha256=digest(ROOT / '附件/附件1.xlsx'),
@@ -89,6 +91,7 @@ def solve(seconds=60, primary_seconds=180, workers=8, hint_name=None,
         model.add_hint(v, int(c['df'] == h['df'] and c['dt'] == h['dt'] and
                              c['dg'] == h.get('dg', 0) and c['canceled'] == h['canceled']))
     changed = lambda c: int(bool(c['df'] or c['dt'] or c['dg']))
+    # 七个目标按题目规定的优先级逐层最小化。
     objectives = [
         ('cancel_total', lambda c: int(c['canceled'])),
         ('cancel_A', lambda c: int(c['canceled'] and c['id'][0] == 'A')),
@@ -104,6 +107,7 @@ def solve(seconds=60, primary_seconds=180, workers=8, hint_name=None,
                    for _, cost in objectives]
     stages = []
     selected = hint_data.get('plans')
+    # 续算时只锁定提示方案中已确认的前缀目标。
     for index in range(fix_prefix):
         name, cost = objectives[index]
         value = sum(cost(p) for p in hints.values())
@@ -142,6 +146,7 @@ def solve(seconds=60, primary_seconds=180, workers=8, hint_name=None,
         record = dict(objective=name, status=solver.status_name(status),
                       lower_bound=solver.best_objective_bound, seconds=round(solver.wall_time, 3))
         if status not in (cp_model.FEASIBLE, cp_model.OPTIMAL):
+            # 限时没有新解时保留已独立验证的可行方案。
             if selected is None:
                 raise RuntimeError(f'No feasible Q4 solution: {record}')
             if status != cp_model.UNKNOWN:
