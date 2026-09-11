@@ -1,0 +1,8 @@
+answer/.venv/
+answer/.cache/
+**/node_modules/
+**/__pycache__/
+*.pyc
+/tmp/
+*.zip
+D题_队友运行包内容/
