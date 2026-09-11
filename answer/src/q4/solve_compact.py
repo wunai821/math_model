@@ -14,6 +14,7 @@ from ortools.sat.python import cp_model
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scheduling import ANSWER, interval, read_plans, save_json
 from q4.solve import candidates_for
+from console import OBJECTIVE_LABELS, finished, header, heartbeat, stage, summary
 
 
 CACHE = ANSWER / ".cache/q4"
@@ -172,7 +173,10 @@ def solve(output=OUTPUT, primary_seconds=PRIMARY_SECONDS, later_seconds=LATER_SE
                     time_safe_tables=safe_table_count, variables=len(model.proto.variables),
                     primary_seconds=primary_seconds, later_seconds=later_seconds,
                     workers=workers, seed=42)
-    print(json.dumps(metadata), flush=True)
+    header('问题4｜紧凑模型')
+    summary('模型规模', 计划数=len(plans), 装备对约束数=pair_count,
+            安全时间表数=safe_table_count, 变量数=len(model.proto.variables),
+            工作线程=workers)
     objectives = [
         ("cancel_total", sum(term for _, term in cancel_terms), primary_seconds),
         ("cancel_A", sum(term for plan, term in cancel_terms if plan["id"].startswith("A")), later_seconds),
@@ -183,25 +187,26 @@ def solve(output=OUTPUT, primary_seconds=PRIMARY_SECONDS, later_seconds=LATER_SE
         ("shift_cost", sum(shift_terms), later_seconds),
     ]
     stages, selected = [], None
-    for name, expression, seconds in objectives:
+    for index, (name, expression, seconds) in enumerate(objectives, start=1):
         model.minimize(expression)
         solver = cp_model.CpSolver()
         solver.parameters.max_time_in_seconds = seconds
         solver.parameters.num_search_workers = workers
         solver.parameters.random_seed = 42
-        status = solver.solve(model)
+        with heartbeat(f"阶段{index}｜{OBJECTIVE_LABELS.get(name, name)}"):
+            status = solver.solve(model)
         record = dict(objective=name, status=solver.status_name(status),
                       lower_bound=solver.best_objective_bound, seconds=round(solver.wall_time, 3))
         if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             record["note"] = "No solution for this stage; retained the preceding feasible result."
-            stages.append(record); print(json.dumps(record), flush=True)
+            stages.append(record); stage(record, index)
             if selected is None:
                 raise RuntimeError(f"No feasible compact Q4 solution: {record}")
             save(selected, stages, metadata, output)
             break
         value = int(round(solver.objective_value))
         record["value"] = value
-        stages.append(record); print(json.dumps(record), flush=True)
+        stages.append(record); stage(record, index)
         selected = []
         for plan in plans:
             value_vars = variables[plan["id"]]
@@ -219,6 +224,8 @@ def solve(output=OUTPUT, primary_seconds=PRIMARY_SECONDS, later_seconds=LATER_SE
             variable = model.get_int_var_from_proto_index(index)
             model.add_hint(variable, solver.value(variable))
         save(selected, stages, metadata, output)
+    finished('问题4紧凑模型求解', output,
+             tuple(record['value'] for record in stages if 'value' in record))
 
 
 if __name__ == "__main__":

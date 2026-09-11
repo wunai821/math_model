@@ -3,11 +3,15 @@ import argparse
 import json
 import os
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 
 import openpyxl
 from ortools.sat.python import cp_model
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from console import OBJECTIVE_LABELS, finished, header, heartbeat, stage, summary
 
 ROOT = Path(__file__).resolve().parents[3]
 CACHE = ROOT / 'answer/.cache/q2'
@@ -83,32 +87,38 @@ def solve(seconds, resume=False):
             h = hints[c['id']] if resume else None
             match = (c['cancel']==h['canceled'] and c['df']==h['df'] and c['dt']==h['dt']) if h else i == ids[-1]
             model.add_hint(variables[i], int(match))
-    print(json.dumps(dict(candidates=len(variables), resource_constraints=len(exclusions))), flush=True)
-    for name, cost in objectives:
+    header('问题2｜候选网格模型')
+    summary('模型规模', 计划数=len(plans), 候选数=len(variables), 资源约束数=len(exclusions))
+    for index, (name, cost) in enumerate(objectives, start=1):
         expr = sum(cost(c)*v for c,v in zip(candidates,variables))
         model.minimize(expr)
         solver = cp_model.CpSolver()
         solver.parameters.max_time_in_seconds = max(seconds, 90) if resume and name=='adjust_total' else seconds
         solver.parameters.num_search_workers = min(8, os.cpu_count() or 1)
         solver.parameters.random_seed = 42
-        status = solver.solve(model)
+        with heartbeat(f"阶段{index}｜{OBJECTIVE_LABELS.get(name, name)}"):
+            status = solver.solve(model)
         if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             if selected is None:
                 raise RuntimeError(solver.status_name(status))
-            log.append(dict(objective=name, status=solver.status_name(status), note='Previous feasible solution retained'))
+            record = dict(objective=name, status=solver.status_name(status), note='上一阶段可行方案已保留')
+            log.append(record)
+            stage(record, index)
             break
         values = [solver.value(v) for v in variables]
         selected = [c for c,val in zip(candidates,values) if val]
         value = int(round(solver.objective_value))
         record = dict(objective=name, value=value, lower_bound=solver.best_objective_bound, status=solver.status_name(status), seconds=round(solver.wall_time,3))
         log.append(record)
-        print(json.dumps(record), flush=True)
+        stage(record, index)
         model.add(expr == value)
         model.clear_hints()
         for v,val in zip(variables,values):
             model.add_hint(v,val)
         save(plans, selected, log)
     save(plans, selected, log)
+    finished('问题2候选网格求解', CACHE / 'solution.json',
+             tuple(record['value'] for record in log if 'value' in record))
 
 
 def save(plans, selected, log):

@@ -15,9 +15,11 @@ from ortools.sat.python import cp_model
 from scheduling import ANSWER, ROOT, cells, digest, read_plans, save_json
 from q4.solve import candidates_for
 from verify_schedule import check_conflicts, check_operations
+from console import header, summary, stage
 
 
 def solve(groups='AB', seconds=60, workers=2):
+    header(f'问题4｜{groups}类撤销下界诊断')
     plans = [p for p in read_plans() if p['id'][0] in groups]
     model = cp_model.CpModel()
     candidates, variables, cancels = [], [], []
@@ -53,7 +55,10 @@ def solve(groups='AB', seconds=60, workers=2):
         check_conflicts(chosen)
         result.update(value=round(solver.objective_value), plans=chosen)
     save_json(ANSWER / f'.cache/q4/lower_bound_{groups}.json', result)
-    print(json.dumps({k: v for k, v in result.items() if k != 'plans'}))
+    summary('模型规模', 计划数=len(plans), 工作线程=workers)
+    stage(dict(objective=f'{groups}类撤销数', value=result.get('value'),
+               lower_bound=result.get('lower_bound'), status=result['status'],
+               seconds=result['seconds']), 1)
 
 
 if __name__ == '__main__':

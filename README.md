@@ -61,7 +61,7 @@ answer/
 
 原始题目和附件保留在原位置。四问代码分别位于 `answer/src/q1` 至 `q4`，提交表统一放入 `answer/results`，建模说明统一放入 `answer/docs`。
 
-## 队友电脑运行说明
+## 电脑运行说明
 
 从 GitHub 获取项目后，必须保持 `附件/` 与 `answer/` 同级。在 `answer` 目录执行 `uv sync` 即可恢复 Python 依赖。
 

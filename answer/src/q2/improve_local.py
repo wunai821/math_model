@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from q2.solve import read_plans
 from q2.solve_compact import OBJECTIVE_NAMES, save, validate_resume
 from verify_schedule import check_conflicts, check_operations
+from console import header, summary
 
 
 CACHE = Path(__file__).resolve().parents[2] / ".cache/q2"
@@ -209,7 +210,7 @@ def self_test():
     moved = next(p for p in selected if p["id"] == "B001")
     assert not moved["canceled"] and (moved["df"] or moved["dt"])
     check_conflicts(selected)
-    print(json.dumps({"self_test": "ok"}))
+    print('【问题2｜局部搜索自检】通过', flush=True)
 
 
 def main():
@@ -229,6 +230,8 @@ def main():
     args = parser.parse_args()
     if args.self_test:
         self_test()
+        header('问题2｜局部搜索自检')
+        summary('自检结果', 状态='通过')
         return
     if (Path(args.input).name != args.input or Path(args.output).name != args.output
             or min(args.rounds, args.size, args.seconds, args.workers) <= 0
@@ -242,6 +245,7 @@ def main():
     check_conflicts(data["plans"])
     current, best = data["plans"], vector(data["plans"])
     cache = {p["id"]: options_for(p) for p in base_plans}
+    header('问题2｜局部邻域优化')
     rng, records, max_candidates = random.Random(args.seed), [], 0
     for number in range(args.rounds):
         free = select_neighborhood(base_plans, current, cache, rng, args.size)
@@ -269,8 +273,12 @@ def main():
                              max_candidates=max_candidates, b_cap=args.b_cap,
                              frozen_prefix=args.fix_prefix,
                              global_optimality_proven=False), CACHE / args.output)
-        print(json.dumps(record, ensure_ascii=False), flush=True)
-    print(json.dumps(dict(output=str(CACHE / args.output), objective=best, rounds=records), ensure_ascii=False))
+        summary('搜索轮次', 轮次=number + 1, 邻域规模=len(free),
+                候选数=candidates, 状态=status,
+                是否改善='是' if record['improved'] else '否',
+                目标向量=record.get('after', best))
+    summary('局部搜索完成', 输出文件=str(CACHE / args.output), 目标向量=best,
+            轮次数=len(records))
 
 
 if __name__ == "__main__":

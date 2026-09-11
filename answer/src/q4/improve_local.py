@@ -14,6 +14,7 @@ from ortools.sat.python import cp_model
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scheduling import ANSWER, cells, read_plans, save_json
 from verify_schedule import check_conflicts, check_operations, source_plans
+from console import header, summary
 from q4.select import objective_vector
 from q4.solve import candidates_for
 from q4.solve_compact import save
@@ -126,6 +127,7 @@ def run_round(plans, current, free_ids, seconds, worker_count, seed=42):
 
 def main(input_name="solution.json", output_name="local.json", seed=42,
          rounds_count=12, neighborhood_size=40, seconds=6.0, worker_count=2):
+    header('问题4｜局部邻域优化')
     plans = read_plans()
     source = source_plans()
     if Path(input_name).name != input_name or Path(output_name).name != output_name:
@@ -157,6 +159,8 @@ def main(input_name="solution.json", output_name="local.json", seed=42,
                            candidates=count, before=best_vector, after=vector))
         if improved:
             current, best_vector = result, vector
+        summary('搜索轮次', 轮次=number + 1, 邻域规模=len(free),
+                候选数=count, 是否改善='是' if improved else '否', 目标向量=vector if result else best_vector)
     final = {"plans": current}
     stages = [dict(objective=name, status="FEASIBLE", value=value,
                    lower_bound=0, seconds=None) for name, value in zip(
@@ -174,7 +178,8 @@ def main(input_name="solution.json", output_name="local.json", seed=42,
         stage["note"] = note
     output = CACHE / output_name
     save(current, stages, metadata, output)
-    print(json.dumps(dict(output=str(output), objective=best_vector, rounds=rounds), ensure_ascii=False))
+    summary('局部搜索完成', 输出文件=str(output), 目标向量=best_vector,
+            轮次数=len(rounds))
 
 
 if __name__ == "__main__":

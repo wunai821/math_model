@@ -1,8 +1,12 @@
 import json, re
+import sys
 from pathlib import Path
 from itertools import combinations
 from collections import Counter, defaultdict
 import openpyxl
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from console import header, summary
 
 root = Path(__file__).resolve().parents[3]
 cache = root / 'answer/.cache/q1'
@@ -39,6 +43,8 @@ degree = Counter(x for pair in pairs for x in pair)
 types = Counter(''.join(sorted([a[0],b[0]])) for a,b in pairs)
 counts = Counter(p['id'][0] for p in plans)
 affected = Counter(x[0] for x in degree)
-stats = dict(total=len(plans), pair_count=len(pairs), event_count=len(events), types=dict(types), counts=dict(counts), affected=dict(affected), unaffected=[p['id'] for p in plans if p['id'] not in degree], max_degree=max(degree.values()), max_degree_ids=[x for x,d in degree.items() if d==max(degree.values())], top=degree.most_common(10), example=events[0])
+stats = dict(total=len(plans), pair_count=len(pairs), event_count=len(events), types=dict(types), counts=dict(counts), affected=dict(affected), involved_count=len(degree), unaffected=[p['id'] for p in plans if p['id'] not in degree], max_degree=max(degree.values()), max_degree_ids=[x for x,d in degree.items() if d==max(degree.values())], top=degree.most_common(10), example=events[0])
 (cache/'data.json').write_text(json.dumps(dict(pairs=pairs,stats=stats,events=events),ensure_ascii=False,indent=2),encoding='utf-8')
-print(json.dumps(stats,ensure_ascii=False,indent=2))
+header('问题1｜冲突检测')
+summary('检测结果', 计划数=stats['total'], 冲突装备对=stats['pair_count'],
+        涉及装备数=stats['involved_count'], 交叠事件数=stats['event_count'])

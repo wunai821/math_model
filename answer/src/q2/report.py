@@ -100,4 +100,4 @@ OPTIMAL表示相应阶段已证明最优，FEASIBLE表示仅取得可行解。�
 完整最终计划和求解状态保存在 `answer/.cache/q2/solution.json`，可供问题3使用；独立验证记录保存在 `answer/.cache/q2/verification.json`。
 '''
 (ROOT/'answer/docs/问题2建模与结果.md').write_text(text, encoding='utf-8')
-print(json.dumps(total, ensure_ascii=False))
+print(f"【问题2｜报告生成】完成；原样保留：{total['unchanged']}；调整：{total['adjusted']}；撤销：{total['canceled']}；最终执行：{150 - total['canceled']}")

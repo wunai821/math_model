@@ -9,6 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scheduling import ANSWER, ROOT, cells, digest, interval, periods, read_plans, save_json
 from ortools.sat.python import cp_model
+from console import finished, header, heartbeat, stage, summary
 
 CACHE = ANSWER / '.cache/q3'
 
@@ -63,13 +64,15 @@ def solve(seconds=180, workers=8):
     area_bound = (100 * horizon - len(occupied)) // (width * duration * count)
     model.add(sum(variables) <= area_bound)
     model.maximize(sum(variables))
-    print(json.dumps(dict(candidates=len(candidates), constraints=len(exclusions),
-                          horizon=horizon, area_upper_bound=area_bound)), flush=True)
+    header('问题3｜新增C类装备布局')
+    summary('模型规模', 候选位置数=len(candidates), 资源约束数=len(exclusions),
+            时间窗口=f'[0,{horizon})', 面积上界=area_bound, 工作线程=workers)
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = seconds
     solver.parameters.num_search_workers = workers
     solver.parameters.random_seed = 42
-    status = solver.solve(model)
+    with heartbeat('最大化新增装备数量'):
+        status = solver.solve(model)
     if status not in (cp_model.FEASIBLE, cp_model.OPTIMAL):
         raise RuntimeError(f'No feasible Q3 solution: {solver.status_name(status)}')
     selected = [dict(p, id=i + 1) for i, p in enumerate(
@@ -83,7 +86,10 @@ def solve(seconds=180, workers=8):
         q2_sha256=digest(q2_path), source_sha256=digest(ROOT / '附件/附件1.xlsx'),
         seconds=round(solver.wall_time, 3), workers=workers, seed=42)
     save_json(CACHE / 'solution.json', result)
-    print(json.dumps({k: result[k] for k in ('count', 'status', 'upper_bound', 'seconds')}), flush=True)
+    stage(dict(objective='新增装备数量', value=result['count'],
+               upper_bound=result['upper_bound'], status=result['status'],
+               seconds=result['seconds']), 1)
+    finished('问题3求解', CACHE / 'solution.json', result['count'])
 
 
 if __name__ == '__main__':
