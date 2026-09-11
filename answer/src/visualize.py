@@ -119,16 +119,18 @@ def axes(draw, box, x_max, y_max, x_label="时间（Δt）", y_label="频段（�
         draw.line((x0, py, x1, py), fill=COLORS["网格"], width=1)
         right_text(draw, (x0 - 16, py), y, font(18), COLORS["次文字"])
     center_text(draw, ((x0 + x1) / 2, y1 + 78), x_label, font(22), COLORS["文字"])
-    center_text(draw, (x0 - 78, (y0 + y1) / 2), y_label, font(22), COLORS["文字"])
+    # Keep the vertical label inside the canvas even for panels placed close
+    # to the left edge (notably the before/after comparison figures).
+    center_text(draw, (max(82, x0 - 78), (y0 + y1) / 2), y_label, font(22), COLORS["文字"])
 
 
-def tf_rect(draw, box, p, s, e, fill, outline=None, alpha=130, y_max=100, x_max=643):
+def tf_rect(draw, box, p, s, e, fill, outline=None, alpha=130, y_max=100, x_max=643, outline_width=1):
     x0, y0, x1, y1 = box
     xa = x0 + s / x_max * (x1 - x0)
     xb = x0 + e / x_max * (x1 - x0)
     ya = y1 - p["hi"] / y_max * (y1 - y0)
     yb = y1 - p["lo"] / y_max * (y1 - y0)
-    draw.rectangle((xa, ya, xb, yb), fill=fill + f"{alpha:02X}", outline=outline, width=1)
+    draw.rectangle((xa, ya, xb, yb), fill=fill + f"{alpha:02X}", outline=outline, width=outline_width)
 
 
 def draw_legend(draw, items, x=120, y=180, gap=190):
@@ -139,15 +141,22 @@ def draw_legend(draw, items, x=120, y=180, gap=190):
         xcur += gap
 
 
-def draw_plan_stack(draw, box, plans, alpha=120, colors=None, skip_canceled=True, x_max=643):
+def draw_plan_stack(draw, box, plans, alpha=120, colors=None, skip_canceled=True, x_max=643,
+                    highlight_ids=None, highlight_color="#7A4FB2"):
     colors = colors or COLORS
     for p in plans:
         if skip_canceled and p.get("canceled", False):
             continue
         group = p["id"][0] if isinstance(p["id"], str) and p["id"][:1] in "ABC" else "C"
         c = colors.get(group, COLORS["新增"])
-        for s, e in periods(p):
+        for period_index, (s, e) in enumerate(periods(p)):
             tf_rect(draw, box, p, s, e, c, alpha=alpha, x_max=x_max)
+            if highlight_ids and p["id"] in highlight_ids and period_index == 0:
+                # Mark only the first occurrence of an adjusted plan. This
+                # keeps repeated-use strips readable while still identifying
+                # the plan that was shifted in frequency or time.
+                tf_rect(draw, box, p, s, e, c, outline=highlight_color, alpha=0,
+                        x_max=x_max, outline_width=2)
 
 
 def fig01_raw(source):
@@ -258,29 +267,59 @@ def fig05_q2_resolution(q2):
     save(im, "图5_问题2消解结果.png")
 
 
-def draw_tf_panel(d, box, plans, title, title_color, conflict_events=None, source_map=None, x_max=643):
-    d.text((box[0], box[1]-58), title, font=font(28, True), fill=title_color)
+def draw_tf_panel(d, box, plans, title, title_color, conflict_events=None, source_map=None,
+                  x_max=643, badge=None, highlight_ids=None):
+    # A very light panel fill keeps the two views visually independent while
+    # leaving the grid and the colored occupancy rectangles readable.
+    d.rounded_rectangle(box, radius=10, fill="#FBFCFE", outline="#D6DEE7", width=2)
+    d.text((box[0], box[1]-60), title, font=font(28, True), fill=title_color)
+    if badge:
+        bw, bh = text_size(d, badge, font(18, True))
+        d.rounded_rectangle((box[2]-bw-28, box[1]-59, box[2], box[1]-22), radius=8, fill="#F3F6F9", outline="#D6DEE7")
+        d.text((box[2]-bw-14, box[1]-51), badge, font=font(18, True), fill=COLORS["次文字"])
     ticks = [0, 200, 400, 600] if x_max <= 643 else [0, 200, 400, 600, 700]
     axes(d, box, x_max, 100, x_ticks=ticks, y_ticks=[0, 50, 100])
-    draw_plan_stack(d, box, plans, alpha=100, x_max=x_max)
+    draw_plan_stack(d, box, plans, alpha=78 if not conflict_events else 72, x_max=x_max,
+                    highlight_ids=highlight_ids)
     if conflict_events and source_map:
         for a, b, _, _, s, e in conflict_events:
             pa, pb = source_map[a], source_map[b]
             lo = max(pa["lo"], pb["lo"]); hi = min(pa["hi"], pb["hi"])
             q = {"lo": lo, "hi": hi}
-            tf_rect(d, box, q, s, e, COLORS["冲突"], alpha=62, x_max=x_max)
+            tf_rect(d, box, q, s, e, COLORS["冲突"], alpha=105, x_max=x_max)
 
 
 def fig06_q2_before_after(source, q1, q2):
-    im, d = new_canvas("图6  问题2消解前后时频占用对比", "左：原始方案及冲突区域；右：完成调整后的方案。红色区域为重复使用时段与频段的交集")
-    left = (120, 300, 970, 970)
-    right = (1030, 300, 1880, 970)
+    im, d = new_canvas("图6  问题2消解前后时频占用对比", "同一时频窗口下对照原始方案与冲突消解方案；红色叠加区域表示时间与频段同时重叠")
+    # Keep a generous left margin for the vertical axis label and a clear
+    # centre gutter for the before/after transition cue.
+    left = (175, 320, 915, 955)
+    right = (1085, 320, 1825, 955)
     source_map = {p["id"]: p for p in source}
-    draw_tf_panel(d, left, source, "原始方案：297对冲突", COLORS["冲突"], q1["events"], source_map)
+    draw_tf_panel(d, left, source, "原始方案：297对冲突", COLORS["冲突"], q1["events"], source_map, badge="150项计划")
     active = [p for p in q2["plans"] if not p.get("canceled", False)]
-    draw_tf_panel(d, right, active, "调整后：0对冲突", COLORS["A"])
-    d.rounded_rectangle((730, 1030, 1250, 1090), radius=9, fill="#FDECEC", outline="#F2B3B3")
-    center_text(d, (990, 1060), "冲突装备对：297 → 0", font(25, True), COLORS["冲突"])
+    adjusted_ids = {p["id"] for p in q2["plans"] if not p.get("canceled", False) and (p.get("df", 0) or p.get("dt", 0))}
+    adjusted_pairs = sum(a in adjusted_ids or b in adjusted_ids for a, b in (tuple(x) for x in q1["pairs"]))
+    canceled_pairs = len(q1["pairs"]) - adjusted_pairs
+    draw_tf_panel(d, right, active, "调整后：0对冲突", COLORS["A"], badge=f"{len(active)}项执行",
+                  highlight_ids=adjusted_ids)
+
+    # Shared legend explains all visual channels once, above both panels.
+    draw_legend(d, [("A类装备", COLORS["A"]), ("B类装备", COLORS["B"]), ("C类装备", COLORS["C"]), ("冲突重叠", COLORS["冲突"]), ("调整计划", "#7A4FB2")], 175, 205, 170)
+    d.rounded_rectangle((975, 184, 1825, 230), radius=8, fill="#F7F9FB", outline="#D6DEE7")
+    d.text((1000, 196), "判定规则：时间区间与频段区间同时相交，即记为一对冲突", font=font(18), fill=COLORS["次文字"])
+
+    # A compact transition cue makes the before/after reading direction explicit.
+    d.line((950, 636, 1050, 636), fill="#AAB7C4", width=3)
+    d.polygon([(1050, 636), (1030, 626), (1030, 646)], fill="#AAB7C4")
+    center_text(d, (1000, 606), "消解", font(18, True), COLORS["A"])
+
+    d.rounded_rectangle((735, 1028, 1265, 1094), radius=11, fill="#FDECEC", outline="#F2B3B3", width=2)
+    center_text(d, (1000, 1061), "冲突装备对：297 → 0（100%消解）", font(25, True), COLORS["冲突"])
+    d.rounded_rectangle((1360, 1020, 1825, 1100), radius=11, fill="#F3EEFA", outline="#C9B8DD", width=2)
+    d.text((1382, 1035), f"调整关联冲突对：{adjusted_pairs} 对", font=font(19, True), fill="#6A3F9B")
+    d.text((1382, 1068), f"涉及 {len(adjusted_ids)} 项计划；另 {canceled_pairs} 对通过撤销处理", font=font(15), fill="#80639B")
+    d.text((760, 1138), "注：右图仅绘制未撤销的 144 项执行计划；紫色描边标记调整计划的首个使用时段。", font=font(18), fill=COLORS["次文字"])
     save(im, "图6_问题2消解前后时频占用.png")
 
 
@@ -476,14 +515,26 @@ def fig13_q4_before_after(source, q1, q4):
     active = [p for p in q4["plans"] if not p.get("canceled", False)]
     x_max = max(max(e for _, e in periods(p)) for p in active)
     x_max = max(720, x_max)
-    im, d = new_canvas("图13  问题4调整前后时频占用对比", "左：原始方案及冲突区域；右：允许C类调整间隔后的146项执行方案")
-    left = (100, 300, 965, 970)
-    right = (1035, 300, 1900, 970)
+    im, d = new_canvas("图13  问题4调整前后时频占用对比", f"同一时频窗口下对照原始方案与允许 C 类调整间隔后的方案；右图为 {len(active)} 项执行计划，红色叠加区域表示原始冲突")
+    left = (175, 320, 915, 955)
+    right = (1085, 320, 1825, 955)
     source_map = {p["id"]: p for p in source}
-    draw_tf_panel(d, left, source, "原始方案：297对冲突", COLORS["冲突"], q1["events"], source_map, x_max=x_max)
-    draw_tf_panel(d, right, active, "问题4方案：146项，0对冲突", "#D95F5F", x_max=x_max)
-    d.rounded_rectangle((610, 1030, 1390, 1090), radius=9, fill="#FFF1F1", outline="#E9A1A1")
-    center_text(d, (1000, 1060), "执行计划：144 → 146；冲突装备对：297 → 0", font(25, True), COLORS["冲突"])
+    draw_tf_panel(d, left, source, "原始方案：297对冲突", COLORS["冲突"], q1["events"], source_map, x_max=x_max, badge="150项计划")
+    gap_adjusted_ids = {p["id"] for p in q4["plans"] if not p.get("canceled", False) and p.get("gap", 0) != source_map[p["id"]].get("gap", 0)}
+    draw_tf_panel(d, right, active, f"问题4方案：{len(active)}项，0对冲突", "#D95F5F", x_max=x_max,
+                  badge=f"{len(active)}项执行", highlight_ids=gap_adjusted_ids)
+    draw_legend(d, [("A类装备", COLORS["A"]), ("B类装备", COLORS["B"]), ("C类装备", COLORS["C"]), ("冲突重叠", COLORS["冲突"]), ("间隔调整", "#7A4FB2")], 175, 205, 170)
+    d.rounded_rectangle((975, 184, 1825, 230), radius=8, fill="#F7F9FB", outline="#D6DEE7")
+    d.text((1000, 196), "判定规则：时间区间与频段区间同时相交，即记为一对冲突", font=font(18), fill=COLORS["次文字"])
+    d.line((950, 636, 1050, 636), fill="#AAB7C4", width=3)
+    d.polygon([(1050, 636), (1030, 626), (1030, 646)], fill="#AAB7C4")
+    center_text(d, (1000, 606), "消解", font(18, True), COLORS["A"])
+    d.rounded_rectangle((610, 1028, 1390, 1094), radius=11, fill="#FFF1F1", outline="#E9A1A1", width=2)
+    center_text(d, (1000, 1061), "执行计划：144 → 146；冲突装备对：297 → 0", font(25, True), COLORS["冲突"])
+    d.rounded_rectangle((1410, 1020, 1825, 1100), radius=11, fill="#F3EEFA", outline="#C9B8DD", width=2)
+    d.text((1430, 1035), f"间隔调整计划：{len(gap_adjusted_ids)} 项", font=font(18, True), fill="#6A3F9B")
+    d.text((1430, 1068), "紫色描边标记首个使用时段", font=font(15), fill="#80639B")
+    d.text((760, 1138), f"注：右图绘制问题4的 {len(active)} 项执行计划；紫色描边标记改变使用间隔的计划。", font=font(18), fill=COLORS["次文字"])
     save(im, "图13_问题4调整前后时频占用.png")
 
 
