@@ -21,16 +21,16 @@ answer/
   uv.lock                    Python依赖锁定文件
   src/q1/
     solve.py                 问题1检测与独立复核
-    export.mjs               按模板导出问题1结果
+    export_xlsx.py           按模板导出问题1结果
   src/q2/
     solve_compact.py         问题2紧凑约束优化模型
     solve.py                 问题2网格候选参考模型
     verify.py                独立检查最终方案和提交表
-    export.mjs               按模板导出问题2结果
+    export_xlsx.py           按模板导出问题2结果
     report.py                生成问题2建模与统计说明
   src/q3/
     solve.py                 固定问题2方案，最大化新增C类装备数量
-    export.mjs               按模板导出问题3结果
+    export_xlsx.py           按模板导出问题3结果
     verify.py                独立复核基准计划、新增计划与提交表
     report.py                生成问题3建模与结果说明
   src/q4/
@@ -39,7 +39,7 @@ answer/
     select.py                独立检查候选方案，按7层目标择优
     improve_local.py         固定邻域外计划的小范围重排
     lower_bound.py           子集放松模型，用于下界诊断
-    export.mjs               按模板导出问题4结果
+    export_xlsx.py           按模板导出问题4结果
     verify.py                独立检查单参数限制、周期冲突与提交表
     report.py                生成问题4建模与统计说明
   src/scheduling.py          问题3、4共用输入和资源网格函数
@@ -65,7 +65,7 @@ answer/
 
 从 GitHub 获取项目后，必须保持 `附件/` 与 `answer/` 同级。在 `answer` 目录执行 `uv sync` 即可恢复 Python 依赖。
 
-Excel 导出推荐使用不依赖 Codex 专用运行时的 Python 脚本：
+Excel 导出统一使用项目自带的 Python 脚本：
 
 ```powershell
 uv run python src/export_xlsx.py 1
@@ -74,7 +74,7 @@ uv run python src/export_xlsx.py 3
 uv run python src/export_xlsx.py 4
 ```
 
-每一问求解完成后再运行对应导出。原来的 `export.mjs` 仍可在已配置 Codex Artifact Tool 的电脑上使用，但普通电脑不需要配置 Node.js。
+每一问求解完成后再运行对应导出，不需要额外安装其他运行时。
 
 ## 运行问题1
 
@@ -87,15 +87,15 @@ uv run python src/q1/solve.py
 
 程序读取原始附件，执行区间交叠检测与独立网格复核，将冲突对和统计结果写入 `.cache/q1/data.json`。当前结果为297个冲突装备对，涉及148台装备。
 
-Excel导出使用Codex捆绑的Node.js与 `@oai/artifact-tool`。本机 `src/q1/node_modules` 是指向捆绑依赖的目录联接，不是依赖副本。在 `answer` 目录执行：
+导出问题1结果，在 `answer` 目录执行：
 
 ```powershell
-& "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" src/q1/export.mjs
+uv run python src/export_xlsx.py 1
 ```
 
-运行后更新 `results/result1.xlsx`，预览保存在 `.cache/q1`。迁移到其他机器时，需重新连接可用的Artifact Tool依赖；Python依赖可直接用 `uv sync` 恢复。
+运行后更新 `results/result1.xlsx`。Python依赖可直接用 `uv sync` 恢复。
 
-`.venv`、`.cache`、`node_modules` 和Python缓存已加入Git忽略规则。最终结果文件和建模说明不忽略。
+`.venv`、`.cache` 和Python缓存已加入Git忽略规则。最终结果文件和建模说明不忽略。
 
 ## 运行问题2
 
@@ -104,7 +104,7 @@ Excel导出使用Codex捆绑的Node.js与 `@oai/artifact-tool`。本机 `src/q1/
 ```powershell
 uv sync
 uv run python src/q2/solve_compact.py
-& "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" src/q2/export.mjs
+uv run python src/export_xlsx.py 2
 uv run python src/q2/verify.py
 uv run python src/q2/report.py
 ```
@@ -119,7 +119,7 @@ uv run python src/q2/solve_compact.py --hint solution.json --output candidate_q2
 
 求解使用OR-Tools CP-SAT，分阶段优化撤销数量、调整数量、类别优先级和平移幅度。时间限制内返回的可行解不一定最优，具体状态和下界写入建模说明。`verify.py`独立读取原始数据，核查最终全部计划与导出的Excel；发现错误时返回非零退出码。
 
-问题2的Node依赖同样通过 `src/q2/node_modules` 连接本机Codex捆绑依赖。主模型输出 `.cache/q2/solution.json`，最终提交表为 `results/result2.xlsx`，报告为 `docs/问题2建模与结果.md`。
+主模型输出 `.cache/q2/solution.json`，最终提交表为 `results/result2.xlsx`，报告为 `docs/问题2建模与结果.md`。
 
 第二轮补充了 `src/q2/improve_local.py`。它释放部分装备、固定其余计划，以严格字典序目标重排。`--size 150`释放全体装备；`--fix-prefix 3`仅固定当前前三项目标数量，不表示第三项目标已经证明最优。候选经过独立操作与冲突核查，仅记录实际改善，默认不替换正式方案。
 
@@ -135,7 +135,7 @@ uv run python src/q2/improve_local.py --input solution.json --output round2_full
 
 ```powershell
 uv run python src/q3/solve.py --workers 4
-& "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" src/q3/export.mjs
+uv run python src/export_xlsx.py 3
 uv run python src/q3/verify.py
 uv run python src/q3/report.py
 ```
@@ -152,7 +152,7 @@ uv run python src/q3/report.py
 
 ```powershell
 uv run python src/q4/solve.py --workers 4
-& "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" src/q4/export.mjs
+uv run python src/export_xlsx.py 4
 uv run python src/q4/verify.py
 uv run python src/q4/report.py
 ```
@@ -181,7 +181,7 @@ uv run python src/q4/select.py grid_solution.json compact.json
 uv run python src/q4/improve_local.py
 uv run python src/q4/solve.py --hint local.json --output grid_refined.json --fix-prefix 3 --seconds 45 --workers 4
 uv run python src/q4/select.py solution.json local.json grid_refined.json
-& "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" src/q4/export.mjs
+uv run python src/export_xlsx.py 4
 uv run python src/q4/report.py
 ```
 
@@ -195,7 +195,7 @@ uv run python src/q4/report.py
 uv run python src/q4/check_cancel_limit.py --limit 3 --keep-a --seconds 90 --workers 2
 uv run python src/q4/solve.py --hint cancel_limit_3_keep_a_candidate.json --output cancel3_keep_a_refined.json --fix-prefix 1 --seconds 10 --workers 3
 uv run python src/q4/select.py solution.json cancel3_keep_a_refined.json
-& "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" src/q4/export.mjs
+uv run python src/export_xlsx.py 4
 uv run python src/q4/report.py
 ```
 
@@ -213,13 +213,9 @@ uv run python src/q4/select.py solution.json round2_global.json round2_refined.j
 
 比赛规则和可确认的AI参与环节已记入 `docs/规则核对与AI使用记录.md`。该文件明确区分程序自动核验与参赛队人工审查，不能代替最终人工复核及规定的AI使用详情PDF。
 
-问题3、4的导出共用 `src/export_results.mjs`，依赖通过 `src/node_modules` 连接Codex捆绑运行时。迁移到新机器时，在 `answer` 目录重建连接：
+问题3、4也使用 `src/export_xlsx.py` 导出，不依赖额外运行时。问题3、4验证器要求对应最终Excel存在；失败返回非零退出码。
 
-```powershell
-New-Item -ItemType Junction -Path src/node_modules -Target "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules"
-```
-
-问题3、4验证器要求对应最终Excel存在；失败返回非零退出码。报告程序会再次调用验证器，避免输出未经验证或与当前表格不一致的统计。
+报告程序会再次调用验证器，避免输出未经验证或与当前表格不一致的统计。
 
 运行边界测试：
 
