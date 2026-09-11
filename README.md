@@ -53,6 +53,21 @@ answer/
 
 原始题目和附件保留在原位置。四问代码分别位于 `answer/src/q1` 至 `q4`，提交表统一放入 `answer/results`，建模说明统一放入 `answer/docs`。
 
+## 队友电脑运行说明
+
+从 GitHub 获取项目后，必须保持 `附件/` 与 `answer/` 同级。在 `answer` 目录执行 `uv sync` 即可恢复 Python 依赖。
+
+Excel 导出推荐使用不依赖 Codex 专用运行时的 Python 脚本：
+
+```powershell
+uv run python src/export_xlsx.py 1
+uv run python src/export_xlsx.py 2
+uv run python src/export_xlsx.py 3
+uv run python src/export_xlsx.py 4
+```
+
+每一问求解完成后再运行对应导出。原来的 `export.mjs` 仍可在已配置 Codex Artifact Tool 的电脑上使用，但普通电脑不需要配置 Node.js。
+
 ## 运行问题1
 
 在 `answer` 目录执行：
