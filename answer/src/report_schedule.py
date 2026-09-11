@@ -71,6 +71,18 @@ def q3_report(data):
 q2 基准文件 SHA-256：`{data['q2_sha256']}`。验证器会拒绝与该基准不一致的结果，防止 q2 更新后继续使用旧 q3 方案。
 
 来源：根目录 `D题.pdf` 问题3及附录、`附件/附件1.xlsx`、`附件/附件2/result3.xlsx`，以及当前 `answer/.cache/q2/solution.json`。所有数值以 Δf、Δt 为单位。
+
+## 文档与源码对应关系
+
+| 内容 | 源码或结果 |
+|---|---|
+| 新增容量求解程序 | [`src/q3/solve.py`](../src/q3/solve.py) |
+| 独立验证程序 | [`src/q3/verify.py`](../src/q3/verify.py) |
+| Markdown 报告生成 | [`src/q3/report.py`](../src/q3/report.py) 与 [`src/report_schedule.py`](../src/report_schedule.py) |
+| Excel 导出程序 | [`src/export_xlsx.py`](../src/export_xlsx.py) |
+| q3 求解结果 | `.cache/q3/solution.json` |
+| q3 验证结果 | `.cache/q3/verification.json` |
+| 提交表 | [`result3.xlsx`](../results/result3.xlsx) |
 '''
 
 
@@ -229,4 +241,19 @@ def q4_report(data):
 提交文件：[result4.xlsx](../results/result4.xlsx)。只写调整或撤销的装备：B列频段、C列首次时间、D列新间隔、E列撤销“是”，每行仅填写其中一项，其他列留空。
 
 来源：根目录 `D题.pdf` 问题4及附录、`附件/附件1.xlsx`、`附件/附件2/result4.xlsx`。所有数值以 Δf、Δt 为单位。
+
+## 文档与源码对应关系
+
+| 内容 | 源码或结果 |
+|---|---|
+| 网格模型主程序 | [`src/q4/solve.py`](../src/q4/solve.py) |
+| 紧凑模型 | [`src/q4/solve_compact.py`](../src/q4/solve_compact.py) 与 [`src/q4/model.py`](../src/q4/model.py) |
+| 候选方案比较 | [`src/q4/select.py`](../src/q4/select.py) |
+| 独立验证程序 | [`src/q4/verify.py`](../src/q4/verify.py) |
+| 复测入口 | [`src/q4/reproduce.py`](../src/q4/reproduce.py) |
+| Markdown 报告生成 | [`src/q4/report.py`](../src/q4/report.py) 与 [`src/report_schedule.py`](../src/report_schedule.py) |
+| Excel 导出程序 | [`src/export_xlsx.py`](../src/export_xlsx.py) |
+| q4 求解结果 | `.cache/q4/solution.json` |
+| q4 验证结果 | `.cache/q4/verification.json` |
+| 提交表 | [`result4.xlsx`](../results/result4.xlsx) |
 '''

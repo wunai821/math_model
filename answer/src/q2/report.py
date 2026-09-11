@@ -98,6 +98,19 @@ OPTIMAL表示相应阶段已证明最优，FEASIBLE表示仅取得可行解。�
 提交文件：[result2.xlsx](../results/result2.xlsx)。按附件2模板，只填写调整或撤销的装备：频移只填B列，时间平移只填C列，撤销只在D列填“是”，其余单元格留空。
 
 完整最终计划和求解状态保存在 `answer/.cache/q2/solution.json`，可供问题3使用；独立验证记录保存在 `answer/.cache/q2/verification.json`。
+
+## 文档与源码对应关系
+
+| 内容 | 源码或结果 |
+|---|---|
+| 紧凑优化主程序 | [`src/q2/solve_compact.py`](../src/q2/solve_compact.py) |
+| 参考网格模型 | [`src/q2/solve.py`](../src/q2/solve.py) |
+| 独立验证程序 | [`src/q2/verify.py`](../src/q2/verify.py) |
+| Markdown 报告生成 | [`src/q2/report.py`](../src/q2/report.py) |
+| Excel 导出程序 | [`src/export_xlsx.py`](../src/export_xlsx.py) |
+| 求解结果 | `.cache/q2/solution.json` |
+| 验证结果 | `.cache/q2/verification.json` |
+| 提交表 | [`result2.xlsx`](../results/result2.xlsx) |
 '''
 (ROOT/'answer/docs/问题2建模与结果.md').write_text(text, encoding='utf-8')
 print(f"【问题2｜报告生成】完成；原样保留：{total['unchanged']}；调整：{total['adjusted']}；撤销：{total['canceled']}；最终执行：{150 - total['canceled']}")
