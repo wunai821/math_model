@@ -139,7 +139,7 @@ def draw_legend(draw, items, x=120, y=180, gap=190):
         xcur += gap
 
 
-def draw_plan_stack(draw, box, plans, alpha=120, colors=None, skip_canceled=True):
+def draw_plan_stack(draw, box, plans, alpha=120, colors=None, skip_canceled=True, x_max=643):
     colors = colors or COLORS
     for p in plans:
         if skip_canceled and p.get("canceled", False):
@@ -147,7 +147,7 @@ def draw_plan_stack(draw, box, plans, alpha=120, colors=None, skip_canceled=True
         group = p["id"][0] if isinstance(p["id"], str) and p["id"][:1] in "ABC" else "C"
         c = colors.get(group, COLORS["新增"])
         for s, e in periods(p):
-            tf_rect(draw, box, p, s, e, c, alpha=alpha, x_max=643)
+            tf_rect(draw, box, p, s, e, c, alpha=alpha, x_max=x_max)
 
 
 def fig01_raw(source):
@@ -258,16 +258,17 @@ def fig05_q2_resolution(q2):
     save(im, "图5_问题2消解结果.png")
 
 
-def draw_tf_panel(d, box, plans, title, title_color, conflict_events=None, source_map=None):
+def draw_tf_panel(d, box, plans, title, title_color, conflict_events=None, source_map=None, x_max=643):
     d.text((box[0], box[1]-58), title, font=font(28, True), fill=title_color)
-    axes(d, box, 643, 100, x_ticks=[0, 200, 400, 600], y_ticks=[0, 50, 100])
-    draw_plan_stack(d, box, plans, alpha=100)
+    ticks = [0, 200, 400, 600] if x_max <= 643 else [0, 200, 400, 600, 700]
+    axes(d, box, x_max, 100, x_ticks=ticks, y_ticks=[0, 50, 100])
+    draw_plan_stack(d, box, plans, alpha=100, x_max=x_max)
     if conflict_events and source_map:
         for a, b, _, _, s, e in conflict_events:
             pa, pb = source_map[a], source_map[b]
             lo = max(pa["lo"], pb["lo"]); hi = min(pa["hi"], pb["hi"])
             q = {"lo": lo, "hi": hi}
-            tf_rect(d, box, q, s, e, COLORS["冲突"], alpha=62)
+            tf_rect(d, box, q, s, e, COLORS["冲突"], alpha=62, x_max=x_max)
 
 
 def fig06_q2_before_after(source, q1, q2):
@@ -368,11 +369,122 @@ def fig10_q4_modes(q4):
     labels = ["频移", "时间平移", "间隔调整", "撤销"]
     cols = [COLORS["频移"], COLORS["时移"], COLORS["间隔调整"], COLORS["撤销"]]
     gap_count = sum(s[g]["gap"] for g in "ABC")
-    im, d = new_canvas("图10  问题4方案调整方式构成", f"问题4允许C类改变使用间隔；间隔调整{gap_count}项，是减少撤销的重要操作来源")
+    im, d = new_canvas("图10  问题4方案调整方式构成", f"问题4允许C类改变使用间隔；间隔调整{gap_count}项，是方案中的主要调整方式")
     draw_vbars(d, (230, 320, 1770, 920), labels, values, cols, max_value=65, value_suffix="项")
     d.rounded_rectangle((1050, 200, 1770, 255), radius=8, fill="#F4EEFF", outline="#CBB2F2")
     d.text((1090, 217), f"间隔调整：{gap_count}项（C类）", font=font(24, True), fill=COLORS["间隔调整"])
     save(im, "图10_问题4调整方式构成.png")
+
+
+def arrow(draw, start, end, color="#8AA0B5", width=5):
+    draw.line((*start, *end), fill=color, width=width)
+    x0, y0 = start
+    x1, y1 = end
+    if abs(x1 - x0) >= abs(y1 - y0):
+        sign = 1 if x1 >= x0 else -1
+        tip = (x1, y1)
+        base = (x1 - sign * 22, y1)
+        draw.polygon([tip, (base[0], base[1] - 12), (base[0], base[1] + 12)], fill=color)
+    else:
+        sign = 1 if y1 >= y0 else -1
+        tip = (x1, y1)
+        base = (x1, y1 - sign * 22)
+        draw.polygon([tip, (base[0] - 12, base[1]), (base[0] + 12, base[1])], fill=color)
+
+
+def flow_box(draw, box, title, subtitle, fill, outline):
+    draw.rounded_rectangle(box, radius=18, fill=fill, outline=outline, width=3)
+    x0, y0, x1, y1 = box
+    center_text(draw, ((x0+x1)/2, y0+43), title, font(28, True), outline)
+    center_text(draw, ((x0+x1)/2, y0+88), subtitle, font(20), COLORS["文字"])
+
+
+def fig11_workflow():
+    im, d = new_canvas("图11  四问建模与验证流程", "从原始计划出发，四问结果均经过独立验证后再导出提交表")
+    flow_box(d, (90, 400, 430, 570), "原始附件", "150项用频计划", "#EEF3F8", COLORS["A"])
+    flow_box(d, (535, 400, 875, 570), "问题1", "冲突检测与冲突图", "#EEF3F8", COLORS["A"])
+    flow_box(d, (980, 250, 1320, 420), "问题2", "平移/撤销消解", "#EAF3EC", COLORS["C"])
+    flow_box(d, (980, 600, 1320, 770), "问题4", "C类间隔调整", "#F4EEFF", "#8D62C8")
+    flow_box(d, (1430, 250, 1770, 420), "问题3", "新增C类布局", "#FFF1F1", COLORS["新增"])
+    flow_box(d, (1430, 600, 1770, 770), "独立验证", "冲突/边界/Excel", "#FFF7E8", "#D98E24")
+    arrow(d, (430, 485), (535, 485))
+    arrow(d, (875, 445), (980, 335))
+    arrow(d, (875, 525), (980, 685))
+    arrow(d, (1320, 335), (1430, 335))
+    arrow(d, (1320, 685), (1430, 685))
+    arrow(d, (1600, 420), (1600, 600))
+    d.rounded_rectangle((610, 920, 1390, 1010), radius=14, fill="#F7F9FB", outline="#D5DCE5", width=2)
+    center_text(d, (1000, 965), "验证通过后统一导出 result1.xlsx ～ result4.xlsx", font(26, True), COLORS["文字"])
+    arrow(d, (1600, 770), (1390, 965))
+    save(im, "图11_四问建模与验证流程.png")
+
+
+def _stage_map(data):
+    return {s.get("objective"): s for s in data.get("stages", []) if "value" in s}
+
+
+def _value(value):
+    if value is None:
+        return "—"
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value)
+
+
+def fig12_bounds(q2, q3, q4):
+    labels = ["撤销总数", "A类撤销", "B类撤销", "调整总数", "A类调整", "B类调整", "调整成本"]
+    keys = ["cancel_total", "cancel_A", "cancel_B", "adjust_total", "adjust_A", "adjust_B", "shift_cost"]
+    q2s, q4s = _stage_map(q2), _stage_map(q4)
+    if 'cancel_total' in q4s:
+        primary = dict(q4s['cancel_total'])
+        primary['lower_bound'] = max(primary.get('lower_bound', 0),
+                                     q4.get('comparison', {}).get('cancel_lower_bound', 0))
+        q4s['cancel_total'] = primary
+    im, d = new_canvas("图12  求解结果与最优性状态", "当前值与求解器界限对照；绿色表示已证明最优，橙色表示限时可行")
+    x = [120, 610, 1070, 1530]
+    headers = ["目标", "问题2", "问题4", "状态说明"]
+    widths = [440, 420, 420, 350]
+    y0, row_h = 260, 92
+    for left, width, title in zip(x, widths, headers):
+        d.rounded_rectangle((left, y0, left + width, y0 + 62), radius=8, fill="#EAF0F5", outline="#C6D2DE")
+        center_text(d, (left + width/2, y0 + 31), title, font(23, True), COLORS["文字"])
+    for i, (label, key) in enumerate(zip(labels, keys)):
+        y = y0 + 62 + i * row_h
+        fill = "#FFFFFF" if i % 2 == 0 else "#F8FAFC"
+        d.rectangle((x[0], y, x[-1] + widths[-1], y + row_h), fill=fill)
+        d.line((x[0], y + row_h, x[-1] + widths[-1], y + row_h), fill="#DCE3EA", width=1)
+        d.text((x[0] + 18, y + 28), label, font=font(22, True), fill=COLORS["文字"])
+        for col, data, color in ((1, q2s.get(key), COLORS["A"]), (2, q4s.get(key), "#D95F5F")):
+            if data is None:
+                text = "—"
+                status = "未执行"
+            else:
+                bound_key = "lower_bound" if "lower_bound" in data else "upper_bound"
+                bound_label = "下界" if bound_key == "lower_bound" else "上界"
+                text = f"当前 {_value(data.get('value'))} / {bound_label} {_value(data.get(bound_key))}"
+                status = "已证明最优" if data.get("status") == "OPTIMAL" else "限时可行"
+            center_text(d, (x[col] + widths[col]/2, y + 30), text, font(20, True), color)
+            if col == 2:
+                center_text(d, (x[col] + widths[col]/2, y + 61), status, font(18), "#2D8A57" if status == "已证明最优" else "#C77A18")
+        d.text((x[3] + 18, y + 28), "问题2：" + ("已证" if q2s.get(key, {}).get("status") == "OPTIMAL" else "限时") + "；问题4：" + ("已证" if q4s.get(key, {}).get("status") == "OPTIMAL" else "限时"), font=font(18), fill=COLORS["次文字"])
+    d.rounded_rectangle((300, 1010, 1700, 1090), radius=12, fill="#FFF1F1", outline="#E9A1A1")
+    center_text(d, (1000, 1050), f"问题3：新增{q3['count']}台，状态：{'已证明最优' if q3.get('status') == 'OPTIMAL' else '限时可行'}，上界：{_value(q3.get('upper_bound'))}", font(24, True), COLORS["新增"])
+    save(im, "图12_求解结果与最优性状态.png")
+
+
+def fig13_q4_before_after(source, q1, q4):
+    active = [p for p in q4["plans"] if not p.get("canceled", False)]
+    x_max = max(max(e for _, e in periods(p)) for p in active)
+    x_max = max(720, x_max)
+    im, d = new_canvas("图13  问题4调整前后时频占用对比", "左：原始方案及冲突区域；右：允许C类调整间隔后的146项执行方案")
+    left = (100, 300, 965, 970)
+    right = (1035, 300, 1900, 970)
+    source_map = {p["id"]: p for p in source}
+    draw_tf_panel(d, left, source, "原始方案：297对冲突", COLORS["冲突"], q1["events"], source_map, x_max=x_max)
+    draw_tf_panel(d, right, active, "问题4方案：146项，0对冲突", "#D95F5F", x_max=x_max)
+    d.rounded_rectangle((610, 1030, 1390, 1090), radius=9, fill="#FFF1F1", outline="#E9A1A1")
+    center_text(d, (1000, 1060), "执行计划：144 → 146；冲突装备对：297 → 0", font(25, True), COLORS["冲突"])
+    save(im, "图13_问题4调整前后时频占用.png")
 
 
 def main():
@@ -391,6 +503,9 @@ def main():
     fig08_q3(source, q2, q3)
     fig09_q4_compare(q2, q4)
     fig10_q4_modes(q4)
+    fig11_workflow()
+    fig12_bounds(q2, q3, q4)
+    fig13_q4_before_after(source, q1, q4)
     manifest = """# D题可视化图表清单
 
 | 图号 | 文件 |
@@ -405,6 +520,9 @@ def main():
 | 图8 | 图8_问题3新增C类装备布局.png |
 | 图9 | 图9_问题2与问题4方案对比.png |
 | 图10 | 图10_问题4调整方式构成.png |
+| 图11 | 图11_四问建模与验证流程.png |
+| 图12 | 图12_求解结果与最优性状态.png |
+| 图13 | 图13_问题4调整前后时频占用.png |
 
 图中文字、坐标轴、图例和注释均为中文；所有图按统一的A/B/C配色和时频窗口绘制。
 """

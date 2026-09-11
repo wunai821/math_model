@@ -12,6 +12,10 @@ from pathlib import Path
 
 import openpyxl
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from console import verification
+
 ROOT = Path(__file__).resolve().parents[2]
 ANSWER = ROOT / 'answer'
 
@@ -144,6 +148,10 @@ def check_q3(data, source):
 
 
 def check_q4(data, source):
+    expected_hash = data.get('metadata', {}).get('source_sha256')
+    if expected_hash:
+        actual_hash = hashlib.sha256((ROOT / '附件/附件1.xlsx').read_bytes()).hexdigest()
+        require(expected_hash == actual_hash, 'Q4 source SHA-256 mismatch')
     rows, stats = check_operations(source, data['plans'], 4)
     require(data['rows'] == rows, 'Q4 cached rows mismatch')
     for group in 'ABC':
@@ -173,11 +181,12 @@ def verify(question):
         data = json.loads((cache / 'solution.json').read_text(encoding='utf-8'))
         report.update((check_q3 if question == 3 else check_q4)(data, source_plans()))
         report['solution_sha256'] = hashlib.sha256((cache / 'solution.json').read_bytes()).hexdigest()
+        report['source_sha256'] = hashlib.sha256((ROOT / '附件/附件1.xlsx').read_bytes()).hexdigest()
         report['result_sha256'] = hashlib.sha256((ANSWER / f'results/result{question}.xlsx').read_bytes()).hexdigest()
         report['ok'] = True
     except (ValueError, KeyError, TypeError, OSError) as exc:
         report['errors'].append(str(exc))
     cache.mkdir(parents=True, exist_ok=True)
     (cache / 'verification.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
-    print(json.dumps(report, ensure_ascii=False, indent=2))
+    verification(report, f'问题{question}｜独立验证')
     return 0 if report['ok'] else 1

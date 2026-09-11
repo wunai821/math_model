@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "mode": "search",
+  "source_sha256": "b7f905cd2629f9a85b47db352be503404a0cd5b8f70b9209aafdf7e262f3449c",
+  "reference_sha256": null,
+  "model_sha256": "34eacd763f25131d6c28717eeca0ce16c4cf54f5df817fb63b12fee1e564381b",
+  "runner_sha256": "633cb8393ca85b347db3612614cb710fbd23799599117cbe54b4f36926b56cbe",
+  "lock_sha256": "713a2acc3526708f09a046b4d282cb4cfec07ae3a8d4f120fd13e147e434123e",
+  "python": "3.13.2",
+  "ortools": "9.15.6755",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "parameters": {
+    "seconds": 120.0,
+    "workers": 2,
+    "seed": 20260911
+  },
+  "fixed_objective_vector": null,
+  "fixed_equipment_moves": false,
+  "hint_used": false,
+  "optimality_proved": false,
+  "note": "Cold feasibility search for <=3 cancellations and zero A cancellations",
+  "solver_status": "OPTIMAL",
+  "seconds": 72.68636310000001,
+  "deterministic_time": 280.18543139405426,
+  "objectives": [
+    3,
+    0,
+    3,
+    147,
+    20,
+    37,
+    983
+  ],
+  "pair_checks": 10731,
+  "conflicts": 0,
+  "solution_sha256": "64e49fcf7d2f3658df72787c3cc27f7d97c02744de450745062cdeb5353369b3",
+  "same_plans_as_reference": null
+}

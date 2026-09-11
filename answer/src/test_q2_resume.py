@@ -2,7 +2,7 @@
 import copy
 import unittest
 
-from q2.solve_compact import validate_resume
+from q2.solve_compact import validate_cancel_b_experiment, validate_resume
 
 
 class ResumeTests(unittest.TestCase):
@@ -37,6 +37,13 @@ class ResumeTests(unittest.TestCase):
         self.data['plans'][0].update(df=1, dt=1, lo=1, hi=4, start=1, end=3)
         with self.assertRaisesRegex(ValueError, 'multiple parameters'):
             validate_resume([self.base], self.data, 2)
+
+    def test_capped_b_experiment_must_be_isolated_resume(self):
+        validate_cancel_b_experiment('candidate.json', 'solution.json', 2)
+        with self.assertRaisesRegex(ValueError, 'fix_prefix=2'):
+            validate_cancel_b_experiment('candidate.json', 'solution.json', 1)
+        with self.assertRaisesRegex(ValueError, 'distinct'):
+            validate_cancel_b_experiment('solution.json', 'solution.json', 2)
 
 
 if __name__ == '__main__':

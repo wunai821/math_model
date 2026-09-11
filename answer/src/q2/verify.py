@@ -14,6 +14,10 @@ from pathlib import Path
 
 import openpyxl
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from console import verification
+
 
 ROOT = Path(__file__).resolve().parents[3]
 SOURCE = ROOT / "附件" / "附件1.xlsx"
@@ -72,6 +76,7 @@ def main():
         report["checks"]["solution_present"] = False
         REPORT.parent.mkdir(parents=True, exist_ok=True)
         REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        verification(report, '问题2｜独立验证')
         return 1
     report["checks"]["solution_present"] = True
     try:
@@ -80,6 +85,7 @@ def main():
         report["errors"].append(f"cannot parse solution.json: {exc}")
         REPORT.parent.mkdir(parents=True, exist_ok=True)
         REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        verification(report, '问题2｜独立验证')
         return 1
 
     plans = solution.get("plans", [])
@@ -193,7 +199,7 @@ def main():
     if canonical != expected_rows:
         errors.append("solution.rows does not exactly match changed/revoked plans")
 
-    if RESULT.exists():
+    if RESULT is not None and RESULT.exists():
         book = openpyxl.load_workbook(RESULT, data_only=True)
         ws = book.active
         actual = [[ws.cell(r, c).value for c in range(1, 5)] for r in range(1, ws.max_row + 1)]
@@ -208,7 +214,7 @@ def main():
     report["ok"] = not errors
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps(report, ensure_ascii=False, indent=2))
+    verification(report, '问题2｜独立验证')
     return 0 if report["ok"] else 1
 
 

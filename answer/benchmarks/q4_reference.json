@@ -1,0 +1,3124 @@
+{
+  "plans": [
+    {
+      "id": "A001",
+      "lo": 86,
+      "hi": 96,
+      "start": 35,
+      "end": 40,
+      "gap": 60,
+      "count": 3,
+      "df": 6,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A002",
+      "lo": 2,
+      "hi": 12,
+      "start": 45,
+      "end": 50,
+      "gap": 60,
+      "count": 3,
+      "df": -3,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A003",
+      "lo": 28,
+      "hi": 38,
+      "start": 75,
+      "end": 80,
+      "gap": 60,
+      "count": 3,
+      "df": 8,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A004",
+      "lo": 28,
+      "hi": 38,
+      "start": 95,
+      "end": 100,
+      "gap": 60,
+      "count": 3,
+      "df": -7,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A005",
+      "lo": 70,
+      "hi": 80,
+      "start": 125,
+      "end": 130,
+      "gap": 60,
+      "count": 3,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A006",
+      "lo": 32,
+      "hi": 42,
+      "start": 0,
+      "end": 5,
+      "gap": 60,
+      "count": 3,
+      "df": -8,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A007",
+      "lo": 73,
+      "hi": 83,
+      "start": 172,
+      "end": 177,
+      "gap": 60,
+      "count": 3,
+      "df": 0,
+      "dt": -3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A008",
+      "lo": 9,
+      "hi": 19,
+      "start": 211,
+      "end": 216,
+      "gap": 60,
+      "count": 3,
+      "df": -6,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A009",
+      "lo": 75,
+      "hi": 85,
+      "start": 228,
+      "end": 233,
+      "gap": 60,
+      "count": 3,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A010",
+      "lo": 30,
+      "hi": 40,
+      "start": 267,
+      "end": 272,
+      "gap": 60,
+      "count": 3,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A011",
+      "lo": 60,
+      "hi": 70,
+      "start": 275,
+      "end": 280,
+      "gap": 60,
+      "count": 3,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A012",
+      "lo": 36,
+      "hi": 46,
+      "start": 300,
+      "end": 305,
+      "gap": 60,
+      "count": 3,
+      "df": -4,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A013",
+      "lo": 82,
+      "hi": 92,
+      "start": 191,
+      "end": 196,
+      "gap": 60,
+      "count": 3,
+      "df": 0,
+      "dt": 1,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A014",
+      "lo": 6,
+      "hi": 16,
+      "start": 348,
+      "end": 353,
+      "gap": 60,
+      "count": 3,
+      "df": 4,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A015",
+      "lo": 30,
+      "hi": 40,
+      "start": 385,
+      "end": 390,
+      "gap": 60,
+      "count": 3,
+      "df": 5,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A016",
+      "lo": 30,
+      "hi": 40,
+      "start": 418,
+      "end": 423,
+      "gap": 60,
+      "count": 3,
+      "df": 0,
+      "dt": 3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A017",
+      "lo": 50,
+      "hi": 60,
+      "start": 432,
+      "end": 437,
+      "gap": 60,
+      "count": 3,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A018",
+      "lo": 49,
+      "hi": 59,
+      "start": 451,
+      "end": 456,
+      "gap": 60,
+      "count": 3,
+      "df": 4,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A019",
+      "lo": 75,
+      "hi": 85,
+      "start": 485,
+      "end": 490,
+      "gap": 60,
+      "count": 3,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "A020",
+      "lo": 10,
+      "hi": 20,
+      "start": 371,
+      "end": 376,
+      "gap": 60,
+      "count": 3,
+      "df": 0,
+      "dt": -4,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B001",
+      "lo": 80,
+      "hi": 95,
+      "start": 19,
+      "end": 22,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 4,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B002",
+      "lo": 65,
+      "hi": 80,
+      "start": 26,
+      "end": 29,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -1,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B003",
+      "lo": 50,
+      "hi": 65,
+      "start": 27,
+      "end": 30,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B004",
+      "lo": 30,
+      "hi": 45,
+      "start": 41,
+      "end": 44,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -4,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B005",
+      "lo": 1,
+      "hi": 16,
+      "start": 57,
+      "end": 60,
+      "gap": 40,
+      "count": 4,
+      "df": -4,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B006",
+      "lo": 75,
+      "hi": 90,
+      "start": 95,
+      "end": 98,
+      "gap": 40,
+      "count": 4,
+      "df": -10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B007",
+      "lo": 60,
+      "hi": 75,
+      "start": 57,
+      "end": 60,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -5,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B008",
+      "lo": 45,
+      "hi": 60,
+      "start": 85,
+      "end": 88,
+      "gap": 40,
+      "count": 4,
+      "df": 5,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B009",
+      "lo": 22,
+      "hi": 37,
+      "start": 81,
+      "end": 84,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 4,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B010",
+      "lo": 15,
+      "hi": 30,
+      "start": 24,
+      "end": 27,
+      "gap": 40,
+      "count": 4,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B011",
+      "lo": 70,
+      "hi": 85,
+      "start": 158,
+      "end": 161,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B012",
+      "lo": 45,
+      "hi": 60,
+      "start": 167,
+      "end": 170,
+      "gap": 40,
+      "count": 4,
+      "df": -10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B013",
+      "lo": 45,
+      "hi": 60,
+      "start": 182,
+      "end": 185,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B014",
+      "lo": 30,
+      "hi": 45,
+      "start": 188,
+      "end": 191,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B015",
+      "lo": 25,
+      "hi": 40,
+      "start": 197,
+      "end": 200,
+      "gap": 40,
+      "count": 4,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B016",
+      "lo": 85,
+      "hi": 100,
+      "start": 232,
+      "end": 235,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B017",
+      "lo": 52,
+      "hi": 67,
+      "start": 202,
+      "end": 205,
+      "gap": 40,
+      "count": 4,
+      "df": -8,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B018",
+      "lo": 40,
+      "hi": 55,
+      "start": 228,
+      "end": 231,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B019",
+      "lo": 25,
+      "hi": 40,
+      "start": 219,
+      "end": 222,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B020",
+      "lo": 0,
+      "hi": 15,
+      "start": 119,
+      "end": 122,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -5,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B021",
+      "lo": 80,
+      "hi": 95,
+      "start": 295,
+      "end": 298,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": true
+    },
+    {
+      "id": "B022",
+      "lo": 75,
+      "hi": 90,
+      "start": 307,
+      "end": 310,
+      "gap": 40,
+      "count": 4,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B023",
+      "lo": 50,
+      "hi": 65,
+      "start": 308,
+      "end": 311,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B024",
+      "lo": 30,
+      "hi": 45,
+      "start": 308,
+      "end": 311,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B025",
+      "lo": 6,
+      "hi": 21,
+      "start": 337,
+      "end": 340,
+      "gap": 40,
+      "count": 4,
+      "df": -9,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B026",
+      "lo": 80,
+      "hi": 95,
+      "start": 370,
+      "end": 373,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -5,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B027",
+      "lo": 65,
+      "hi": 80,
+      "start": 337,
+      "end": 340,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -5,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B028",
+      "lo": 45,
+      "hi": 60,
+      "start": 360,
+      "end": 363,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -5,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B029",
+      "lo": 30,
+      "hi": 45,
+      "start": 357,
+      "end": 360,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": true
+    },
+    {
+      "id": "B030",
+      "lo": 15,
+      "hi": 30,
+      "start": 386,
+      "end": 389,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B031",
+      "lo": 83,
+      "hi": 98,
+      "start": 410,
+      "end": 413,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": -5,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B032",
+      "lo": 76,
+      "hi": 91,
+      "start": 427,
+      "end": 430,
+      "gap": 40,
+      "count": 4,
+      "df": 9,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B033",
+      "lo": 52,
+      "hi": 67,
+      "start": 430,
+      "end": 433,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": true
+    },
+    {
+      "id": "B034",
+      "lo": 25,
+      "hi": 40,
+      "start": 445,
+      "end": 448,
+      "gap": 40,
+      "count": 4,
+      "df": -5,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B035",
+      "lo": 20,
+      "hi": 35,
+      "start": 457,
+      "end": 460,
+      "gap": 40,
+      "count": 4,
+      "df": 5,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B036",
+      "lo": 0,
+      "hi": 15,
+      "start": 497,
+      "end": 500,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B037",
+      "lo": 49,
+      "hi": 64,
+      "start": 462,
+      "end": 465,
+      "gap": 40,
+      "count": 4,
+      "df": -9,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B038",
+      "lo": 43,
+      "hi": 58,
+      "start": 485,
+      "end": 488,
+      "gap": 40,
+      "count": 4,
+      "df": 3,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B039",
+      "lo": 20,
+      "hi": 35,
+      "start": 480,
+      "end": 483,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "B040",
+      "lo": 5,
+      "hi": 20,
+      "start": 426,
+      "end": 429,
+      "gap": 40,
+      "count": 4,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C001",
+      "lo": 90,
+      "hi": 93,
+      "start": 40,
+      "end": 42,
+      "gap": 3,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -5,
+      "canceled": false
+    },
+    {
+      "id": "C002",
+      "lo": 82,
+      "hi": 85,
+      "start": 27,
+      "end": 29,
+      "gap": 1,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -7,
+      "canceled": false
+    },
+    {
+      "id": "C003",
+      "lo": 75,
+      "hi": 78,
+      "start": 29,
+      "end": 31,
+      "gap": 1,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -7,
+      "canceled": false
+    },
+    {
+      "id": "C004",
+      "lo": 60,
+      "hi": 63,
+      "start": 31,
+      "end": 33,
+      "gap": 4,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -4,
+      "canceled": false
+    },
+    {
+      "id": "C005",
+      "lo": 55,
+      "hi": 58,
+      "start": 33,
+      "end": 35,
+      "gap": 5,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -3,
+      "canceled": false
+    },
+    {
+      "id": "C006",
+      "lo": 47,
+      "hi": 50,
+      "start": 25,
+      "end": 27,
+      "gap": 3,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -5,
+      "canceled": false
+    },
+    {
+      "id": "C007",
+      "lo": 45,
+      "hi": 48,
+      "start": 2,
+      "end": 4,
+      "gap": 8,
+      "count": 12,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C008",
+      "lo": 20,
+      "hi": 23,
+      "start": 29,
+      "end": 31,
+      "gap": 9,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 1,
+      "canceled": false
+    },
+    {
+      "id": "C009",
+      "lo": 13,
+      "hi": 16,
+      "start": 31,
+      "end": 33,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C010",
+      "lo": 4,
+      "hi": 7,
+      "start": 8,
+      "end": 10,
+      "gap": 1,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -7,
+      "canceled": false
+    },
+    {
+      "id": "C011",
+      "lo": 96,
+      "hi": 99,
+      "start": 80,
+      "end": 82,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C012",
+      "lo": 83,
+      "hi": 86,
+      "start": 65,
+      "end": 67,
+      "gap": 9,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 1,
+      "canceled": false
+    },
+    {
+      "id": "C013",
+      "lo": 70,
+      "hi": 73,
+      "start": 75,
+      "end": 77,
+      "gap": 13,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 5,
+      "canceled": false
+    },
+    {
+      "id": "C014",
+      "lo": 65,
+      "hi": 68,
+      "start": 92,
+      "end": 94,
+      "gap": 4,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -4,
+      "canceled": false
+    },
+    {
+      "id": "C015",
+      "lo": 60,
+      "hi": 63,
+      "start": 110,
+      "end": 112,
+      "gap": 8,
+      "count": 12,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C016",
+      "lo": 42,
+      "hi": 45,
+      "start": 88,
+      "end": 90,
+      "gap": 5,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -3,
+      "canceled": false
+    },
+    {
+      "id": "C017",
+      "lo": 45,
+      "hi": 48,
+      "start": 95,
+      "end": 97,
+      "gap": 8,
+      "count": 12,
+      "df": 9,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C018",
+      "lo": 16,
+      "hi": 19,
+      "start": 107,
+      "end": 109,
+      "gap": 8,
+      "count": 12,
+      "df": -4,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C019",
+      "lo": 12,
+      "hi": 15,
+      "start": 86,
+      "end": 88,
+      "gap": 4,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -4,
+      "canceled": false
+    },
+    {
+      "id": "C020",
+      "lo": 2,
+      "hi": 5,
+      "start": 65,
+      "end": 67,
+      "gap": 1,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -7,
+      "canceled": false
+    },
+    {
+      "id": "C021",
+      "lo": 97,
+      "hi": 100,
+      "start": 125,
+      "end": 127,
+      "gap": 8,
+      "count": 12,
+      "df": 2,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C022",
+      "lo": 96,
+      "hi": 99,
+      "start": 147,
+      "end": 149,
+      "gap": 8,
+      "count": 12,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C023",
+      "lo": 67,
+      "hi": 70,
+      "start": 171,
+      "end": 173,
+      "gap": 8,
+      "count": 12,
+      "df": -9,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C024",
+      "lo": 63,
+      "hi": 66,
+      "start": 150,
+      "end": 152,
+      "gap": 8,
+      "count": 12,
+      "df": 1,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C025",
+      "lo": 54,
+      "hi": 57,
+      "start": 132,
+      "end": 134,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C026",
+      "lo": 38,
+      "hi": 41,
+      "start": 145,
+      "end": 147,
+      "gap": 8,
+      "count": 12,
+      "df": -8,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C027",
+      "lo": 25,
+      "hi": 28,
+      "start": 165,
+      "end": 167,
+      "gap": 8,
+      "count": 12,
+      "df": -8,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C028",
+      "lo": 19,
+      "hi": 22,
+      "start": 168,
+      "end": 170,
+      "gap": 8,
+      "count": 12,
+      "df": -5,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C029",
+      "lo": 11,
+      "hi": 14,
+      "start": 137,
+      "end": 139,
+      "gap": 16,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 8,
+      "canceled": false
+    },
+    {
+      "id": "C030",
+      "lo": 6,
+      "hi": 9,
+      "start": 122,
+      "end": 124,
+      "gap": 13,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 5,
+      "canceled": false
+    },
+    {
+      "id": "C031",
+      "lo": 94,
+      "hi": 97,
+      "start": 265,
+      "end": 267,
+      "gap": 5,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -3,
+      "canceled": false
+    },
+    {
+      "id": "C032",
+      "lo": 86,
+      "hi": 89,
+      "start": 246,
+      "end": 248,
+      "gap": 14,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 6,
+      "canceled": false
+    },
+    {
+      "id": "C033",
+      "lo": 70,
+      "hi": 73,
+      "start": 252,
+      "end": 254,
+      "gap": 8,
+      "count": 12,
+      "df": -4,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C034",
+      "lo": 70,
+      "hi": 73,
+      "start": 294,
+      "end": 296,
+      "gap": 8,
+      "count": 12,
+      "df": 8,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C035",
+      "lo": 57,
+      "hi": 60,
+      "start": 274,
+      "end": 276,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C036",
+      "lo": 46,
+      "hi": 49,
+      "start": 266,
+      "end": 268,
+      "gap": 12,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 4,
+      "canceled": false
+    },
+    {
+      "id": "C037",
+      "lo": 22,
+      "hi": 25,
+      "start": 270,
+      "end": 272,
+      "gap": 8,
+      "count": 12,
+      "df": -9,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C038",
+      "lo": 22,
+      "hi": 25,
+      "start": 282,
+      "end": 284,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": -3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C039",
+      "lo": 6,
+      "hi": 9,
+      "start": 264,
+      "end": 266,
+      "gap": 8,
+      "count": 12,
+      "df": -10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C040",
+      "lo": 3,
+      "hi": 6,
+      "start": 242,
+      "end": 244,
+      "gap": 8,
+      "count": 12,
+      "df": -2,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C041",
+      "lo": 90,
+      "hi": 93,
+      "start": 306,
+      "end": 308,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": 3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C042",
+      "lo": 83,
+      "hi": 86,
+      "start": 326,
+      "end": 328,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C043",
+      "lo": 72,
+      "hi": 75,
+      "start": 250,
+      "end": 252,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": -3,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C044",
+      "lo": 66,
+      "hi": 69,
+      "start": 334,
+      "end": 336,
+      "gap": 18,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 10,
+      "canceled": false
+    },
+    {
+      "id": "C045",
+      "lo": 55,
+      "hi": 58,
+      "start": 317,
+      "end": 319,
+      "gap": 8,
+      "count": 12,
+      "df": 2,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C046",
+      "lo": 42,
+      "hi": 45,
+      "start": 327,
+      "end": 329,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C047",
+      "lo": 36,
+      "hi": 39,
+      "start": 341,
+      "end": 343,
+      "gap": 15,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 7,
+      "canceled": false
+    },
+    {
+      "id": "C048",
+      "lo": 21,
+      "hi": 24,
+      "start": 344,
+      "end": 346,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": -2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C049",
+      "lo": 17,
+      "hi": 20,
+      "start": 313,
+      "end": 315,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C050",
+      "lo": 3,
+      "hi": 6,
+      "start": 306,
+      "end": 308,
+      "gap": 8,
+      "count": 12,
+      "df": -2,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C051",
+      "lo": 94,
+      "hi": 97,
+      "start": 225,
+      "end": 227,
+      "gap": 12,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 4,
+      "canceled": false
+    },
+    {
+      "id": "C052",
+      "lo": 86,
+      "hi": 89,
+      "start": 204,
+      "end": 206,
+      "gap": 14,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 6,
+      "canceled": false
+    },
+    {
+      "id": "C053",
+      "lo": 67,
+      "hi": 70,
+      "start": 213,
+      "end": 215,
+      "gap": 8,
+      "count": 12,
+      "df": -4,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C054",
+      "lo": 64,
+      "hi": 67,
+      "start": 218,
+      "end": 220,
+      "gap": 3,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -5,
+      "canceled": false
+    },
+    {
+      "id": "C055",
+      "lo": 60,
+      "hi": 63,
+      "start": 213,
+      "end": 215,
+      "gap": 8,
+      "count": 12,
+      "df": 8,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C056",
+      "lo": 41,
+      "hi": 44,
+      "start": 202,
+      "end": 204,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C057",
+      "lo": 22,
+      "hi": 25,
+      "start": 185,
+      "end": 187,
+      "gap": 8,
+      "count": 12,
+      "df": -10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C058",
+      "lo": 22,
+      "hi": 25,
+      "start": 218,
+      "end": 220,
+      "gap": 8,
+      "count": 12,
+      "df": -2,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C059",
+      "lo": 19,
+      "hi": 22,
+      "start": 201,
+      "end": 203,
+      "gap": 8,
+      "count": 12,
+      "df": 3,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C060",
+      "lo": 2,
+      "hi": 5,
+      "start": 198,
+      "end": 200,
+      "gap": 18,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 10,
+      "canceled": false
+    },
+    {
+      "id": "C061",
+      "lo": 90,
+      "hi": 93,
+      "start": 450,
+      "end": 452,
+      "gap": 12,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 4,
+      "canceled": false
+    },
+    {
+      "id": "C062",
+      "lo": 95,
+      "hi": 98,
+      "start": 420,
+      "end": 422,
+      "gap": 8,
+      "count": 12,
+      "df": 9,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C063",
+      "lo": 73,
+      "hi": 76,
+      "start": 433,
+      "end": 435,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C064",
+      "lo": 61,
+      "hi": 64,
+      "start": 455,
+      "end": 457,
+      "gap": 9,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 1,
+      "canceled": false
+    },
+    {
+      "id": "C065",
+      "lo": 64,
+      "hi": 67,
+      "start": 478,
+      "end": 480,
+      "gap": 8,
+      "count": 12,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C066",
+      "lo": 46,
+      "hi": 49,
+      "start": 442,
+      "end": 444,
+      "gap": 8,
+      "count": 12,
+      "df": 1,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C067",
+      "lo": 40,
+      "hi": 43,
+      "start": 451,
+      "end": 453,
+      "gap": 8,
+      "count": 12,
+      "df": 7,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C068",
+      "lo": 27,
+      "hi": 30,
+      "start": 461,
+      "end": 463,
+      "gap": 15,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 7,
+      "canceled": false
+    },
+    {
+      "id": "C069",
+      "lo": 15,
+      "hi": 18,
+      "start": 441,
+      "end": 443,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C070",
+      "lo": 0,
+      "hi": 3,
+      "start": 415,
+      "end": 417,
+      "gap": 8,
+      "count": 12,
+      "df": -6,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C071",
+      "lo": 92,
+      "hi": 95,
+      "start": 390,
+      "end": 392,
+      "gap": 12,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 4,
+      "canceled": false
+    },
+    {
+      "id": "C072",
+      "lo": 86,
+      "hi": 89,
+      "start": 386,
+      "end": 388,
+      "gap": 13,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 5,
+      "canceled": false
+    },
+    {
+      "id": "C073",
+      "lo": 77,
+      "hi": 80,
+      "start": 398,
+      "end": 400,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C074",
+      "lo": 64,
+      "hi": 67,
+      "start": 400,
+      "end": 402,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": 4,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C075",
+      "lo": 67,
+      "hi": 70,
+      "start": 391,
+      "end": 393,
+      "gap": 8,
+      "count": 12,
+      "df": 10,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C076",
+      "lo": 43,
+      "hi": 46,
+      "start": 384,
+      "end": 386,
+      "gap": 12,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 4,
+      "canceled": false
+    },
+    {
+      "id": "C077",
+      "lo": 31,
+      "hi": 34,
+      "start": 361,
+      "end": 363,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C078",
+      "lo": 26,
+      "hi": 29,
+      "start": 389,
+      "end": 391,
+      "gap": 1,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -7,
+      "canceled": false
+    },
+    {
+      "id": "C079",
+      "lo": 17,
+      "hi": 20,
+      "start": 391,
+      "end": 393,
+      "gap": 0,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": -8,
+      "canceled": false
+    },
+    {
+      "id": "C080",
+      "lo": 0,
+      "hi": 3,
+      "start": 370,
+      "end": 372,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": 2,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C081",
+      "lo": 95,
+      "hi": 98,
+      "start": 484,
+      "end": 486,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": -1,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C082",
+      "lo": 82,
+      "hi": 85,
+      "start": 507,
+      "end": 509,
+      "gap": 11,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 3,
+      "canceled": false
+    },
+    {
+      "id": "C083",
+      "lo": 71,
+      "hi": 74,
+      "start": 531,
+      "end": 533,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C084",
+      "lo": 67,
+      "hi": 70,
+      "start": 510,
+      "end": 512,
+      "gap": 8,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C085",
+      "lo": 51,
+      "hi": 54,
+      "start": 492,
+      "end": 494,
+      "gap": 15,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 7,
+      "canceled": false
+    },
+    {
+      "id": "C086",
+      "lo": 40,
+      "hi": 43,
+      "start": 405,
+      "end": 407,
+      "gap": 8,
+      "count": 12,
+      "df": -2,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C087",
+      "lo": 40,
+      "hi": 43,
+      "start": 525,
+      "end": 527,
+      "gap": 8,
+      "count": 12,
+      "df": 3,
+      "dt": 0,
+      "dg": 0,
+      "canceled": false
+    },
+    {
+      "id": "C088",
+      "lo": 21,
+      "hi": 24,
+      "start": 528,
+      "end": 530,
+      "gap": 9,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 1,
+      "canceled": false
+    },
+    {
+      "id": "C089",
+      "lo": 15,
+      "hi": 18,
+      "start": 497,
+      "end": 499,
+      "gap": 9,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 1,
+      "canceled": false
+    },
+    {
+      "id": "C090",
+      "lo": 3,
+      "hi": 6,
+      "start": 482,
+      "end": 484,
+      "gap": 9,
+      "count": 12,
+      "df": 0,
+      "dt": 0,
+      "dg": 1,
+      "canceled": false
+    }
+  ],
+  "rows": [
+    [
+      "A001",
+      "[86,96)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A002",
+      "[2,12)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A003",
+      "[28,38)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A004",
+      "[28,38)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A005",
+      "[70,80)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A006",
+      "[32,42)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A007",
+      null,
+      "[172,177)",
+      null,
+      null
+    ],
+    [
+      "A008",
+      "[9,19)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A009",
+      "[75,85)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A010",
+      null,
+      "[267,272)",
+      null,
+      null
+    ],
+    [
+      "A011",
+      null,
+      "[275,280)",
+      null,
+      null
+    ],
+    [
+      "A012",
+      "[36,46)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A013",
+      null,
+      "[191,196)",
+      null,
+      null
+    ],
+    [
+      "A014",
+      "[6,16)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A015",
+      "[30,40)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A016",
+      null,
+      "[418,423)",
+      null,
+      null
+    ],
+    [
+      "A018",
+      "[49,59)",
+      null,
+      null,
+      null
+    ],
+    [
+      "A020",
+      null,
+      "[371,376)",
+      null,
+      null
+    ],
+    [
+      "B001",
+      null,
+      "[19,22)",
+      null,
+      null
+    ],
+    [
+      "B002",
+      null,
+      "[26,29)",
+      null,
+      null
+    ],
+    [
+      "B003",
+      null,
+      "[27,30)",
+      null,
+      null
+    ],
+    [
+      "B004",
+      null,
+      "[41,44)",
+      null,
+      null
+    ],
+    [
+      "B005",
+      "[1,16)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B006",
+      "[75,90)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B007",
+      null,
+      "[57,60)",
+      null,
+      null
+    ],
+    [
+      "B008",
+      "[45,60)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B009",
+      null,
+      "[81,84)",
+      null,
+      null
+    ],
+    [
+      "B010",
+      "[15,30)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B011",
+      null,
+      "[158,161)",
+      null,
+      null
+    ],
+    [
+      "B012",
+      "[45,60)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B013",
+      null,
+      "[182,185)",
+      null,
+      null
+    ],
+    [
+      "B014",
+      null,
+      "[188,191)",
+      null,
+      null
+    ],
+    [
+      "B015",
+      "[25,40)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B016",
+      null,
+      "[232,235)",
+      null,
+      null
+    ],
+    [
+      "B017",
+      "[52,67)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B018",
+      null,
+      "[228,231)",
+      null,
+      null
+    ],
+    [
+      "B019",
+      null,
+      "[219,222)",
+      null,
+      null
+    ],
+    [
+      "B020",
+      null,
+      "[119,122)",
+      null,
+      null
+    ],
+    [
+      "B021",
+      null,
+      null,
+      null,
+      "是"
+    ],
+    [
+      "B022",
+      "[75,90)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B023",
+      null,
+      "[308,311)",
+      null,
+      null
+    ],
+    [
+      "B024",
+      null,
+      "[308,311)",
+      null,
+      null
+    ],
+    [
+      "B025",
+      "[6,21)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B026",
+      null,
+      "[370,373)",
+      null,
+      null
+    ],
+    [
+      "B027",
+      null,
+      "[337,340)",
+      null,
+      null
+    ],
+    [
+      "B028",
+      null,
+      "[360,363)",
+      null,
+      null
+    ],
+    [
+      "B029",
+      null,
+      null,
+      null,
+      "是"
+    ],
+    [
+      "B030",
+      null,
+      "[386,389)",
+      null,
+      null
+    ],
+    [
+      "B031",
+      null,
+      "[410,413)",
+      null,
+      null
+    ],
+    [
+      "B032",
+      "[76,91)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B033",
+      null,
+      null,
+      null,
+      "是"
+    ],
+    [
+      "B034",
+      "[25,40)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B035",
+      "[20,35)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B036",
+      null,
+      "[497,500)",
+      null,
+      null
+    ],
+    [
+      "B037",
+      "[49,64)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B038",
+      "[43,58)",
+      null,
+      null,
+      null
+    ],
+    [
+      "B039",
+      null,
+      "[480,483)",
+      null,
+      null
+    ],
+    [
+      "B040",
+      null,
+      "[426,429)",
+      null,
+      null
+    ],
+    [
+      "C001",
+      null,
+      null,
+      3,
+      null
+    ],
+    [
+      "C002",
+      null,
+      null,
+      1,
+      null
+    ],
+    [
+      "C003",
+      null,
+      null,
+      1,
+      null
+    ],
+    [
+      "C004",
+      null,
+      null,
+      4,
+      null
+    ],
+    [
+      "C005",
+      null,
+      null,
+      5,
+      null
+    ],
+    [
+      "C006",
+      null,
+      null,
+      3,
+      null
+    ],
+    [
+      "C007",
+      "[45,48)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C008",
+      null,
+      null,
+      9,
+      null
+    ],
+    [
+      "C009",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C010",
+      null,
+      null,
+      1,
+      null
+    ],
+    [
+      "C012",
+      null,
+      null,
+      9,
+      null
+    ],
+    [
+      "C013",
+      null,
+      null,
+      13,
+      null
+    ],
+    [
+      "C014",
+      null,
+      null,
+      4,
+      null
+    ],
+    [
+      "C015",
+      "[60,63)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C016",
+      null,
+      null,
+      5,
+      null
+    ],
+    [
+      "C017",
+      "[45,48)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C018",
+      "[16,19)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C019",
+      null,
+      null,
+      4,
+      null
+    ],
+    [
+      "C020",
+      null,
+      null,
+      1,
+      null
+    ],
+    [
+      "C021",
+      "[97,100)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C022",
+      "[96,99)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C023",
+      "[67,70)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C024",
+      "[63,66)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C025",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C026",
+      "[38,41)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C027",
+      "[25,28)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C028",
+      "[19,22)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C029",
+      null,
+      null,
+      16,
+      null
+    ],
+    [
+      "C030",
+      null,
+      null,
+      13,
+      null
+    ],
+    [
+      "C031",
+      null,
+      null,
+      5,
+      null
+    ],
+    [
+      "C032",
+      null,
+      null,
+      14,
+      null
+    ],
+    [
+      "C033",
+      "[70,73)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C034",
+      "[70,73)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C035",
+      null,
+      "[274,276)",
+      null,
+      null
+    ],
+    [
+      "C036",
+      null,
+      null,
+      12,
+      null
+    ],
+    [
+      "C037",
+      "[22,25)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C038",
+      null,
+      "[282,284)",
+      null,
+      null
+    ],
+    [
+      "C039",
+      "[6,9)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C040",
+      "[3,6)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C041",
+      null,
+      "[306,308)",
+      null,
+      null
+    ],
+    [
+      "C042",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C043",
+      null,
+      "[250,252)",
+      null,
+      null
+    ],
+    [
+      "C044",
+      null,
+      null,
+      18,
+      null
+    ],
+    [
+      "C045",
+      "[55,58)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C046",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C047",
+      null,
+      null,
+      15,
+      null
+    ],
+    [
+      "C048",
+      null,
+      "[344,346)",
+      null,
+      null
+    ],
+    [
+      "C049",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C050",
+      "[3,6)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C051",
+      null,
+      null,
+      12,
+      null
+    ],
+    [
+      "C052",
+      null,
+      null,
+      14,
+      null
+    ],
+    [
+      "C053",
+      "[67,70)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C054",
+      null,
+      null,
+      3,
+      null
+    ],
+    [
+      "C055",
+      "[60,63)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C056",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C057",
+      "[22,25)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C058",
+      "[22,25)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C059",
+      "[19,22)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C060",
+      null,
+      null,
+      18,
+      null
+    ],
+    [
+      "C061",
+      null,
+      null,
+      12,
+      null
+    ],
+    [
+      "C062",
+      "[95,98)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C064",
+      null,
+      null,
+      9,
+      null
+    ],
+    [
+      "C065",
+      "[64,67)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C066",
+      "[46,49)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C067",
+      "[40,43)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C068",
+      null,
+      null,
+      15,
+      null
+    ],
+    [
+      "C069",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C070",
+      "[0,3)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C071",
+      null,
+      null,
+      12,
+      null
+    ],
+    [
+      "C072",
+      null,
+      null,
+      13,
+      null
+    ],
+    [
+      "C073",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C074",
+      null,
+      "[400,402)",
+      null,
+      null
+    ],
+    [
+      "C075",
+      "[67,70)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C076",
+      null,
+      null,
+      12,
+      null
+    ],
+    [
+      "C077",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C078",
+      null,
+      null,
+      1,
+      null
+    ],
+    [
+      "C079",
+      null,
+      null,
+      0,
+      null
+    ],
+    [
+      "C080",
+      null,
+      "[370,372)",
+      null,
+      null
+    ],
+    [
+      "C081",
+      null,
+      "[484,486)",
+      null,
+      null
+    ],
+    [
+      "C082",
+      null,
+      null,
+      11,
+      null
+    ],
+    [
+      "C085",
+      null,
+      null,
+      15,
+      null
+    ],
+    [
+      "C086",
+      "[40,43)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C087",
+      "[40,43)",
+      null,
+      null,
+      null
+    ],
+    [
+      "C088",
+      null,
+      null,
+      9,
+      null
+    ],
+    [
+      "C089",
+      null,
+      null,
+      9,
+      null
+    ],
+    [
+      "C090",
+      null,
+      null,
+      9,
+      null
+    ]
+  ],
+  "stats": {
+    "A": {
+      "unchanged": 2,
+      "adjusted": 18,
+      "canceled": 0,
+      "frequency": 12,
+      "time": 6,
+      "gap": 0
+    },
+    "B": {
+      "unchanged": 0,
+      "adjusted": 37,
+      "canceled": 3,
+      "frequency": 14,
+      "time": 23,
+      "gap": 0
+    },
+    "C": {
+      "unchanged": 4,
+      "adjusted": 86,
+      "canceled": 0,
+      "frequency": 31,
+      "time": 8,
+      "gap": 47
+    }
+  },
+  "stages": [
+    {
+      "objective": "cancel_total",
+      "status": "FEASIBLE",
+      "value": 3,
+      "lower_bound": 0,
+      "seconds": 83.54612300000001,
+      "note": "Feasibility search only; cancellation minimum not proved Frozen from hint; this fixed prefix is not a global optimality claim.",
+      "frozen": true
+    },
+    {
+      "objective": "cancel_A",
+      "status": "OPTIMAL",
+      "lower_bound": 0.0,
+      "seconds": 1.823,
+      "value": 0
+    },
+    {
+      "objective": "cancel_B",
+      "status": "FEASIBLE",
+      "lower_bound": 0.0,
+      "seconds": 10.015,
+      "value": 3
+    },
+    {
+      "objective": "adjust_total",
+      "status": "FEASIBLE",
+      "lower_bound": 46.0,
+      "seconds": 10.115,
+      "value": 141
+    },
+    {
+      "objective": "adjust_A",
+      "status": "FEASIBLE",
+      "lower_bound": 7.0,
+      "seconds": 10.019,
+      "value": 18
+    },
+    {
+      "objective": "adjust_B",
+      "status": "FEASIBLE",
+      "lower_bound": 33.0,
+      "seconds": 10.22,
+      "value": 37
+    },
+    {
+      "objective": "shift_cost",
+      "status": "FEASIBLE",
+      "lower_bound": 211.0,
+      "seconds": 10.03,
+      "value": 848
+    }
+  ],
+  "metadata": {
+    "candidates": 6209,
+    "resource_constraints": 42072,
+    "seed": 42,
+    "workers": 3,
+    "seconds": 10.0,
+    "primary_seconds": 180,
+    "hint": "cancel_limit_3_keep_a_candidate.json",
+    "frozen_prefix": 1,
+    "frozen_prefix_not_global": true
+  },
+  "shift_cost": 848,
+  "comparison": {
+    "selected": "cancel3_keep_a_refined.json",
+    "candidates": [
+      {
+        "file": "before_cancel3_20260911.json",
+        "objectives": [
+          4,
+          0,
+          1,
+          135,
+          16,
+          37,
+          826
+        ]
+      },
+      {
+        "file": "cancel3_refined.json",
+        "objectives": [
+          3,
+          1,
+          1,
+          140,
+          18,
+          37,
+          850
+        ]
+      },
+      {
+        "file": "cancel_limit_3_keep_a_candidate.json",
+        "objectives": [
+          3,
+          0,
+          3,
+          147,
+          20,
+          37,
+          983
+        ]
+      },
+      {
+        "file": "cancel3_keep_a_refined.json",
+        "objectives": [
+          3,
+          0,
+          3,
+          141,
+          18,
+          37,
+          848
+        ]
+      }
+    ],
+    "cancel_lower_bound": 2.0
+  },
+  "benchmark": {
+    "source_sha256": "b7f905cd2629f9a85b47db352be503404a0cd5b8f70b9209aafdf7e262f3449c",
+    "objectives": [
+      3,
+      0,
+      3,
+      141,
+      18,
+      37,
+      848
+    ],
+    "description": "Verified incumbent; feasibility benchmark, not an optimality certificate",
+    "reference_python": "3.13.2",
+    "reference_ortools": "9.15.6755"
+  }
+}

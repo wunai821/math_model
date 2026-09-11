@@ -8,6 +8,7 @@ from ortools.sat.python import cp_model
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from q2.solve import read_plans
 from verify_schedule import check_operations, check_conflicts
+from console import OBJECTIVE_LABELS, finished, header, heartbeat, stage, summary
 
 ROOT = Path(__file__).resolve().parents[3]
 CACHE = ROOT / "answer/.cache/q2"
@@ -67,7 +68,7 @@ def load_hint(path=HINT):
         return {}
 
 
-def save(plans, choices, stages, output=OUTPUT):
+def save(plans, choices, stages, output=OUTPUT, metadata=None):
     adjusted, rows = [], []
     stats = {g: dict(unchanged=0, adjusted=0, canceled=0, frequency=0, time=0) for g in "ABC"}
     for p in plans:
@@ -88,15 +89,26 @@ def save(plans, choices, stages, output=OUTPUT):
             stats[group]["unchanged"] += 1
         adjusted.append(item)
     CACHE.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(dict(plans=adjusted, rows=rows, stats=stats, stages=stages,
-                                      shift_cost=sum(abs(c["df"]) + 2 * abs(c["dt"])
-                                                     for c in choices.values())),
+    result = dict(plans=adjusted, rows=rows, stats=stats, stages=stages,
+                  shift_cost=sum(abs(c["df"]) + 2 * abs(c["dt"])
+                                 for c in choices.values()))
+    if metadata is not None:
+        result["metadata"] = metadata
+    output.write_text(json.dumps(result,
                                  ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def validate_cancel_b_experiment(output, hint_path, fix_prefix):
+    """Keep capped B-cancellation runs distinct from global lexicographic solves."""
+    if fix_prefix != 2:
+        raise ValueError('cancel_b_limit requires fix_prefix=2')
+    if Path(output).resolve() == Path(hint_path).resolve():
+        raise ValueError('cancel_b_limit requires an output distinct from the hint')
 
 
 def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
           mid_seconds=MID_SECONDS, late_seconds=LATE_SECONDS, workers=None,
-          fix_prefix=0, cancel_b_seconds=None):
+          fix_prefix=0, cancel_b_seconds=None, cancel_b_limit=None):
     """Solve lexicographically, optionally continuing from proven prefix stages.
 
     ``fix_prefix`` is intentionally limited to stages marked OPTIMAL in the
@@ -107,6 +119,10 @@ def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
         raise ValueError('fix_prefix must be in [0, 7]')
     if any(v <= 0 for v in (primary_seconds, mid_seconds, late_seconds)) or (workers is not None and workers <= 0) or (cancel_b_seconds is not None and cancel_b_seconds <= 0):
         raise ValueError('time limits and workers must be positive')
+    if cancel_b_limit is not None and cancel_b_limit < 0:
+        raise ValueError('cancel_b_limit must be nonnegative')
+    if cancel_b_limit is not None:
+        validate_cancel_b_experiment(output, hint_path, fix_prefix)
     plans, model, hint = read_plans(), cp_model.CpModel(), load_hint(hint_path)
     historical = []
     if fix_prefix:
@@ -170,15 +186,19 @@ def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
         ("adjust_B", sum(v for p, v in changes if p["id"].startswith("B")), late_seconds),
         ("shift_cost", sum(costs), late_seconds),
     ]
+    if cancel_b_limit is not None:
+        model.add(sum(v for p, v in cancels if p["id"].startswith("B")) <= cancel_b_limit)
     CACHE.mkdir(parents=True, exist_ok=True)
     LOG.write_text("", encoding="utf-8")
-    def report(record):
+    def report(record, index=None):
         line = json.dumps(record, ensure_ascii=False)
-        print(line, flush=True)
+        stage(record, index)
         with LOG.open("a", encoding="utf-8") as file:
             file.write(line + "\n")
 
-    report(dict(plans=len(plans), pair_constraints=pair_count, variables=len(model.proto.variables)))
+    header('问题2｜紧凑模型')
+    summary('模型规模', 计划数=len(plans), 装备对约束数=pair_count,
+            变量数=len(model.proto.variables))
     stages, selected = [], None
     if fix_prefix:
         for (name, expr, _), record in zip(objectives[:fix_prefix], historical[:fix_prefix]):
@@ -187,19 +207,39 @@ def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
         selected = {p['id']: dict(cancel=hint[p['id']]['canceled'],
                                   df=hint[p['id']]['df'], dt=hint[p['id']]['dt'])
                     for p in plans}
-    for name, expr, seconds in objectives[fix_prefix:]:
+    def experiment_metadata():
+        if cancel_b_limit is None:
+            return None
+        b_canceled = sum(choice['cancel'] for ident, choice in selected.items()
+                         if ident.startswith('B'))
+        return dict(cancel_b_limit=cancel_b_limit,
+                    cap_satisfied=b_canceled <= cancel_b_limit,
+                    fallback=b_canceled > cancel_b_limit)
+    for index, (name, expr, seconds) in enumerate(objectives[fix_prefix:], start=fix_prefix + 1):
         model.minimize(expr)
         solver = cp_model.CpSolver()
         solver.parameters.max_time_in_seconds = seconds
         solver.parameters.num_search_workers = min(workers or 8, os.cpu_count() or 1)
         solver.parameters.random_seed = 42
-        status = solver.solve(model)
+        with heartbeat(f"阶段{index}｜{OBJECTIVE_LABELS.get(name, name)}"):
+            status = solver.solve(model)
         record = dict(objective=name, status=solver.status_name(status), seconds=round(solver.wall_time, 3), lower_bound=solver.best_objective_bound)
         if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-            record["note"] = "No solution for this stage; retained the preceding feasible result."
-            stages.append(record); report(record); break
+            if cancel_b_limit is not None and name == 'cancel_B':
+                b_canceled = sum(choice['cancel'] for ident, choice in selected.items()
+                                 if ident.startswith('B'))
+                record["note"] = (f"No solution found under cancel_B <= {cancel_b_limit}; "
+                                  f"retained fallback baseline has cancel_B={b_canceled} "
+                                  "and does not satisfy this cap.")
+            else:
+                record["note"] = "No solution for this stage; retained the preceding feasible result."
+            stages.append(record); report(record, index); break
         value = int(round(solver.objective_value))
-        record["value"] = value; stages.append(record); report(record)
+        record["value"] = value
+        if cancel_b_limit is not None and name == 'cancel_B':
+            record["note"] = (f"Experimental run under cancel_B <= {cancel_b_limit}; "
+                              "this status does not prove an unrestricted global optimum.")
+        stages.append(record); report(record, index)
         selected = {p["id"]: dict(cancel=bool(solver.value(v["cancel"])), df=solver.value(v["f"]), dt=solver.value(v["t"]))
                     for p in plans for v in [variables[p["id"]]]}
         model.add(expr == value); model.clear_hints()
@@ -210,10 +250,12 @@ def solve(output=OUTPUT, hint_path=HINT, primary_seconds=PRIMARY_SECONDS,
             model.add_hint(v["changed"], int(not c["cancel"] and bool(c["df"] or c["dt"])))
         # Persist every completed lexicographic stage so long later stages do
         # not hide a usable solution if their process is interrupted.
-        save(plans, selected, stages, output)
+        save(plans, selected, stages, output, experiment_metadata())
     if selected is None:
         raise RuntimeError("No feasible compact solution")
-    save(plans, selected, stages, output)
+    save(plans, selected, stages, output, experiment_metadata())
+    finished('问题2紧凑模型求解', output,
+             tuple(record['value'] for record in stages if 'value' in record))
 
 
 if __name__ == "__main__":
@@ -228,8 +270,10 @@ if __name__ == "__main__":
     parser.add_argument("--mid-seconds", type=float, default=MID_SECONDS)
     parser.add_argument("--late-seconds", type=float, default=LATE_SECONDS)
     parser.add_argument("--cancel-b-seconds", type=float, default=None)
+    parser.add_argument("--cancel-b-limit", type=int, default=None,
+                        help="independent feasibility cap for B-category cancellations")
     parser.add_argument("--workers", type=int, default=None)
     args = parser.parse_args()
     solve(CACHE / args.output, CACHE / args.hint, args.primary_seconds,
           args.mid_seconds, args.late_seconds, args.workers, args.fix_prefix,
-          args.cancel_b_seconds)
+          args.cancel_b_seconds, args.cancel_b_limit)

@@ -1,0 +1,55 @@
+{
+  "ok": true,
+  "mode": "reproduce",
+  "source_sha256": "b7f905cd2629f9a85b47db352be503404a0cd5b8f70b9209aafdf7e262f3449c",
+  "reference_sha256": "5c99066e8582874ba93144d292714692357ab6455b01ba19ddb145e201557130",
+  "model_sha256": "34eacd763f25131d6c28717eeca0ce16c4cf54f5df817fb63b12fee1e564381b",
+  "runner_sha256": "a656a6498536b5cd23595b8006e056ab694d6e877a2ee77fea65fb7d795cd988",
+  "implementation_sha256": {
+    "q4/model.py": "34eacd763f25131d6c28717eeca0ce16c4cf54f5df817fb63b12fee1e564381b",
+    "q4/solve.py": "8d62b3f832e3d1f13c0a19bdb62ec07220bc4e9e2474361ef118e5751ef270a0",
+    "q4/select.py": "7da61e32bc5334a99444491f04a1c1284c2518f54bc7c4e56a4c44693ecd511f",
+    "q4/reproduce.py": "a656a6498536b5cd23595b8006e056ab694d6e877a2ee77fea65fb7d795cd988",
+    "scheduling.py": "3fbde2d0135ee2db0dd800ce570346a2c68b4c3482bb40bef5d84f00663db04e",
+    "verify_schedule.py": "31788ac192c31f95e001ffe87b6aac52ef8ad03d9526de132ffd522bd72d0f3c",
+    "console.py": "4f57fdcbc1b750888be72fc0e0138ecd440842e41fadc890bfac22567ab9997e"
+  },
+  "lock_sha256": "713a2acc3526708f09a046b4d282cb4cfec07ae3a8d4f120fd13e147e434123e",
+  "python": "3.13.2",
+  "ortools": "9.15.6755",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "parameters": {
+    "seconds": 60,
+    "workers": 1,
+    "seed": 20260911
+  },
+  "fixed_objective_vector": [
+    3,
+    0,
+    3,
+    141,
+    18,
+    37,
+    848
+  ],
+  "fixed_equipment_moves": false,
+  "hint_used": true,
+  "optimality_proved": false,
+  "note": "Known objective-vector feasibility reconstruction",
+  "solver_status": "OPTIMAL",
+  "seconds": 4.394323,
+  "deterministic_time": 6.597650236999997,
+  "objectives": [
+    3,
+    0,
+    3,
+    141,
+    18,
+    37,
+    848
+  ],
+  "pair_checks": 10731,
+  "conflicts": 0,
+  "solution_sha256": "83bc6692e67a8da516395c2d54a7740f483cb6d88d3cb4e70b7ece278c423c9d",
+  "same_plans_as_reference": true
+}

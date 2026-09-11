@@ -1,5 +1,13 @@
 # D题：时频冲突检测与消解
 
+## 问题4模型复测入口
+
+在 `answer` 目录执行 `uv sync --frozen --python 3.13.2`，再执行 `uv run --frozen python src/q4/reproduce.py`。此入口从原始附件重建完整约束，以持久基准为提示，复测目标向量 `(3,0,3,141,18,37,848)`；不依赖现有缓存，也不覆盖正式结果。它是指定指标的可行性复测，不是重新证明最优。
+
+若要不读取任何旧方案、从头搜索3撤销且A类全保，执行 `uv run --frozen python src/q4/reproduce.py --mode search --seconds 120 --workers 2`。本轮已独立重新搜到该核心结果，后续调整指标可能不同。重复运行请用 `--output` 指定新的空目录。
+
+完整模型、运行命令和验收条件见 [问题4模型与复测说明](answer/docs/问题4模型与复测说明.md)。正式求解和复测共用 `src/q4/model.py`，基准保存在可随项目交付的 `answer/benchmarks/q4_reference.json`。默认 `solve.py` 在无缓存时也会使用此基准作提示，并保留已验证方案的目标上界。
+
 ## 文件位置
 
 ```text
@@ -161,7 +169,7 @@ uv run python src/q4/solve_compact.py --workers 4
 uv run python src/q4/select.py grid_solution.json compact.json
 ```
 
-紧凑模型默认首阶段120秒，后续阶段各60秒，支持 `--primary-seconds`、`--later-seconds`。本次初次运行后续阶段仅20秒，第二阶段返回UNKNOWN，保留了首阶段找到的4撤销方案；代码默认值已提高，并补充完整变量提示以支持后续重算。最终4撤销方案尚未证明最优，两个模型的最强首阶段下界为2。
+紧凑模型默认首阶段120秒，后续阶段各60秒，支持 `--primary-seconds`、`--later-seconds`。此前一次运行后续阶段仅20秒，第二阶段返回UNKNOWN，保留了首阶段找到的4撤销方案；该方案属于历史结果。另在本轮全模型中限制撤销不超过2，搜索120秒返回UNKNOWN，不能证明2撤销不可行。目前全局撤销下界仍为2。
 
 紧凑模型将时间平移和间隔变化枚举为有限模式，预计算每对装备的安全模式组合；与网格模型遵守完全相同的单参数和无冲突约束。默认只写 `.cache/q4/compact.json`，选择程序核查两份方案后更新 `solution.json`，随后应重新导出、验证并生成报告。
 
@@ -181,17 +189,19 @@ uv run python src/q4/report.py
 
 此前另一轮续算还将紧凑模型主阶段延长到300秒（`--output refined.json --primary-seconds 300 --later-seconds 90 --workers 4`），未降低撤销数；其固定调整140项后的阶段被139项的局部方案支配，因此停止了后续无益计算。该历史网格优化结果见问题4报告早期记录；不同线程调度可能产生不同的限时结果。
 
-历史续算曾得到 `(4, 0, 1, 139, 16, 37, 828)`；本轮正式候选继续固定前四层目标并优化后续指标：
+历史续算曾得到 `(4, 0, 1, 139, 16, 37, 828)`；随后得到的 `(4, 0, 1, 135, 16, 37, 826)` 也属于历史结果。本轮使用保留 A 类的3撤销候选继续优化：
 
 ```powershell
-uv run python src/q4/solve.py --hint solution.json --output attempt_cancel3.json --primary-seconds 240 --seconds 20 --workers 3
-uv run python src/q4/solve.py --hint attempt_cancel3.json --output attempt_refined.json --fix-prefix 4 --seconds 35 --workers 3
-uv run python src/q4/select.py solution.json attempt_refined.json
+uv run python src/q4/check_cancel_limit.py --limit 3 --keep-a --seconds 90 --workers 2
+uv run python src/q4/solve.py --hint cancel_limit_3_keep_a_candidate.json --output cancel3_keep_a_refined.json --fix-prefix 1 --seconds 10 --workers 3
+uv run python src/q4/select.py solution.json cancel3_keep_a_refined.json
+& "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" src/q4/export.mjs
+uv run python src/q4/report.py
 ```
 
-当前正式目标向量为 **(4, 0, 1, 135, 16, 37, 826)**，对应撤销总数、A类撤销、B类撤销、调整总数、A类调整、B类调整和归一化成本。撤销总数最强下界仍为2，未证明4是最少撤销；后续指标也是限时可行结果。最终文件为 `results/result4.xlsx`，统计与求解条件见 `docs/问题4建模与结果.md`。
+当前择优方案的目标向量为 **(3, 0, 3, 141, 18, 37, 848)**，对应撤销总数、A类撤销、B类撤销、调整总数、A类调整、B类调整和归一化成本。相较历史4撤销方案，撤销总数按既定优先顺序改善，A 类撤销数保持为0；代价是 B 类撤销由1增至3、调整总数由135增至141。撤销总数已知下界为2，当前方案及后续目标均为限时可行结果，尚未证明字典序最优。按当前 `solution.json` 计算，超过问题3窗口右端643的有效计划为 C068（650）、C088（651）、C082（652）、C085（681），最晚结束时刻为681。问题4没有统一结束时刻上限，不能套用问题3的 `[0,643)` 窗口。最终文件为 `results/result4.xlsx`，统计与求解条件见 `docs/问题4建模与结果.md`。
 
-第二轮使用不同随机种子进行全局搜索，再固定前四项目标续算，将调整总数从137降至135，其他指标不变：
+此前第二轮使用不同随机种子进行全局搜索，再固定前四项目标续算，将调整总数从137降至135，其他指标不变（历史过程）：
 
 ```powershell
 uv run python src/q4/solve.py --hint solution.json --output round2_global.json --primary-seconds 180 --seconds 12 --workers 3 --seed 20260912

@@ -3,29 +3,15 @@ import argparse
 import json
 import os
 import sys
-from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from scheduling import ANSWER, cells, interval, read_plans, save_json
+from scheduling import ANSWER, ROOT, digest, interval, read_plans, save_json
 from ortools.sat.python import cp_model
+from q4.model import build_model, candidates_for
+from console import OBJECTIVE_LABELS, finished, header, heartbeat, stage, summary
 
 CACHE = ANSWER / '.cache/q4'
-
-
-def candidates_for(p):
-    moves = [(0, 0, 0)]
-    moves += [(x, 0, 0) for x in range(-10, 11) if x]
-    moves += [(0, x, 0) for x in range(-5, 6) if x]
-    if p['id'].startswith('C'):
-        moves += [(0, 0, x) for x in range(-10, 11) if x]
-    for df, dt, dg in moves:
-        if p['lo'] + df < 0 or p['hi'] + df > 100 or p['start'] + dt < 0 or p['gap'] + dg < 0:
-            continue
-        yield dict(p, lo=p['lo'] + df, hi=p['hi'] + df,
-                   start=p['start'] + dt, end=p['end'] + dt,
-                   gap=p['gap'] + dg, df=df, dt=dt, dg=dg, canceled=False)
-    yield dict(p, df=0, dt=0, dg=0, canceled=True)
 
 
 def save(selected, stages, metadata, output=CACHE / 'solution.json'):
@@ -44,21 +30,31 @@ def save(selected, stages, metadata, output=CACHE / 'solution.json'):
                          p['gap'] if p['dg'] else None, None])
         else:
             s['unchanged'] += 1
-    save_json(output, dict(plans=selected, rows=rows, stats=stats,
-              stages=stages, metadata=metadata,
-              shift_cost=sum(abs(p['df']) + 2 * abs(p['dt']) + abs(p['dg']) for p in selected)))
+    data = dict(plans=selected, rows=rows, stats=stats,
+                stages=stages, metadata=metadata,
+                shift_cost=sum(abs(p['df']) + 2 * abs(p['dt']) + abs(p['dg']) for p in selected))
+    if metadata.get('inherited_cancel_lower_bound') is not None:
+        data['comparison'] = dict(cancel_lower_bound=metadata['inherited_cancel_lower_bound'],
+                                  note='Historical bound retained from independently checked hint; not reproved here')
+    save_json(output, data)
 
 
 def read_hint(name):
     """Load and independently validate a Q4 cache plan before using it."""
     if name is None:
-        path = ANSWER / '.cache/q2/solution.json'
-        if not path.exists():
+        paths = (CACHE / 'solution.json', ANSWER / 'benchmarks/q4_reference.json',
+                 ANSWER / '.cache/q2/solution.json')
+        path = next((p for p in paths if p.exists()), None)
+        if path is None:
             return {}, None, []
-        return json.loads(path.read_text(encoding='utf-8')), path.name, []
-    path = CACHE / name
+    else:
+        path = CACHE / name
     data = json.loads(path.read_text(encoding='utf-8'))
     from verify_schedule import check_conflicts, check_operations, source_plans
+    expected_hash = data.get('benchmark', {}).get('source_sha256') or data.get('metadata', {}).get('source_sha256')
+    if expected_hash and expected_hash != digest(ROOT / '附件/附件1.xlsx'):
+        raise ValueError('Hint source SHA-256 does not match the original attachment')
+    data['plans'] = [dict(p, dg=p.get('dg', 0)) for p in data['plans']]
     check_operations(source_plans(), data['plans'], 4)
     check_conflicts(data['plans'])
     return data, path.name, data.get('stages', [])
@@ -74,29 +70,20 @@ def solve(seconds=60, primary_seconds=180, workers=8, hint_name=None,
     plans = read_plans()
     hint_data, hint_label, hint_stages = read_hint(hint_name)
     hints = {p['id']: p for p in hint_data.get('plans', [])} if hint_data else {}
-    model = cp_model.CpModel()
-    candidates, variables, groups = [], [], []
-    resource = defaultdict(list)
-    for p in plans:
-        ids = []
-        for c in candidates_for(p):
-            idx = len(candidates)
-            ids.append(idx)
-            candidates.append(c)
-            variables.append(model.new_bool_var(f'x{idx}'))
-            if not c['canceled']:
-                for cell in cells(c):
-                    resource[cell].append(idx)
-        model.add_exactly_one(variables[i] for i in ids)
-        groups.append(ids)
-    exclusions = set(tuple(ids) for ids in resource.values() if len(ids) > 1)
-    for ids in sorted(exclusions):
-        model.add_at_most_one(variables[i] for i in ids)
-    metadata = dict(candidates=len(candidates), resource_constraints=len(exclusions),
+    model, candidates, variables, model_metadata = build_model(plans)
+    metadata = dict(model_metadata,
+                    source_sha256=digest(ROOT / '附件/附件1.xlsx'),
                     seed=seed, workers=workers, seconds=seconds, primary_seconds=primary_seconds,
                     hint=hint_label, frozen_prefix=fix_prefix,
                     frozen_prefix_not_global=bool(fix_prefix))
-    print(json.dumps(metadata), flush=True)
+    if hint_data:
+        metadata['inherited_cancel_lower_bound'] = max(
+            hint_data.get('comparison', {}).get('cancel_lower_bound', 0),
+            next((s.get('lower_bound', 0) for s in hint_stages
+                  if s.get('objective') == 'cancel_total'), 0))
+    header('问题4｜候选网格模型')
+    summary('模型规模', 计划数=len(plans), 候选数=len(candidates),
+            资源约束数=model_metadata['resource_constraints'], 随机种子=seed, 工作线程=workers)
     for c, v in zip(candidates, variables):
         h = hints.get(c['id'], dict(df=0, dt=0, canceled=True))
         model.add_hint(v, int(c['df'] == h['df'] and c['dt'] == h['dt'] and
@@ -116,7 +103,7 @@ def solve(seconds=60, primary_seconds=180, workers=8, hint_name=None,
     expressions = [sum(cost(c) * v for c, v in zip(candidates, variables))
                    for _, cost in objectives]
     stages = []
-    selected = hint_data.get('plans') if hint_name is not None else None
+    selected = hint_data.get('plans')
     for index in range(fix_prefix):
         name, cost = objectives[index]
         value = sum(cost(p) for p in hints.values())
@@ -134,33 +121,49 @@ def solve(seconds=60, primary_seconds=180, workers=8, hint_name=None,
         stages.append(record)
     if fix_prefix == len(objectives):
         save(selected, stages, metadata, output)
+        finished('问题4候选网格求解', output,
+                 tuple(record['value'] for record in stages if 'value' in record))
         return
     for index, (name, _) in enumerate(objectives[fix_prefix:], start=fix_prefix):
         expr = expressions[index]
+        # The independently checked incumbent is feasible for the frozen prefix.
+        # Keeping its current objective as an upper bound prevents a short run
+        # from replacing it with a worse solution. It does not fix its moves.
+        if selected:
+            cost = objectives[index][1]
+            model.add(expr <= sum(cost(p) for p in selected))
         model.minimize(expr)
         solver = cp_model.CpSolver()
         solver.parameters.max_time_in_seconds = primary_seconds if name == 'cancel_total' else seconds
         solver.parameters.num_search_workers = workers
         solver.parameters.random_seed = seed
-        status = solver.solve(model)
+        with heartbeat(f"阶段{index + 1}｜{OBJECTIVE_LABELS.get(name, name)}"):
+            status = solver.solve(model)
         record = dict(objective=name, status=solver.status_name(status),
                       lower_bound=solver.best_objective_bound, seconds=round(solver.wall_time, 3))
         if status not in (cp_model.FEASIBLE, cp_model.OPTIMAL):
-            stages.append(record)
             if selected is None:
                 raise RuntimeError(f'No feasible Q4 solution: {record}')
+            if status != cp_model.UNKNOWN:
+                raise RuntimeError(f'Validated incumbent rejected by model: {record}')
+            record.update(solver_status=record['status'], status='FEASIBLE',
+                          value=sum(objectives[index][1](p) for p in selected),
+                          note='Time limit without a new solution; retained independently verified incumbent')
+            stages.append(record)
             save(selected, stages, metadata, output)
             break
         values = [solver.value(v) for v in variables]
         selected = [c for c, val in zip(candidates, values) if val]
         record['value'] = round(solver.objective_value)
         stages.append(record)
-        print(json.dumps(record), flush=True)
+        stage(record, index + 1)
         save(selected, stages, metadata, output)
         model.add(expr == record['value'])
         model.clear_hints()
         for v, val in zip(variables, values):
             model.add_hint(v, val)
+    finished('问题4候选网格求解', output,
+             tuple(record['value'] for record in stages if 'value' in record))
 
 
 if __name__ == '__main__':
